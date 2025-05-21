@@ -81,14 +81,14 @@ class LoginSuccessView extends StatelessWidget {
                   ),
                   const SizedBox(height: 64),
                   CustomButton(
-                    title: 'انتقل للصفحة الرئيسية',
+                    title: 'انتقل لتسجيل الدخول',
                     pressed: () async {
                       await storeUserData(); // ✅ تخزين حالة الدخول
 
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const NavUser(),
+                          builder: (context) => const LoginView(),
                         ),
                         (route) => false,
                       );
