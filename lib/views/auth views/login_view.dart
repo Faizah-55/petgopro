@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:petgo_clone/main.dart';
 import 'package:petgo_clone/views/auth%20views/create_account_view.dart';
-import 'package:petgo_clone/views/auth%20views/verify_otp_view.dart';
+import 'package:petgo_clone/views/auth%20views/login_success_view.dart';
 import 'package:petgo_clone/widgets/custom_bottom.dart';
 import 'package:petgo_clone/widgets/custom_textfelid_widget.dart';
 import 'package:petgo_clone/widgets/custom_auth_widget.dart';
@@ -14,10 +15,8 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final supabase = Supabase.instance.client;
-
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController(); // ✅
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -115,37 +114,39 @@ class _LoginViewState extends State<LoginView> {
                 }
 
                 try {
-                  // الخطوة 1: التحقق من الإيميل والباسوورد
+                  // ✅ الخطوة 1: تسجيل الدخول بالبريد وكلمة المرور
                   final AuthResponse loginResponse = await supabase.auth
                       .signInWithPassword(email: email, password: password);
 
-                  if (loginResponse.user == null) {
+                  final user = loginResponse.user;
+                  if (user == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('فشل تسجيل الدخول')),
                     );
                     return;
                   }
 
-                  // الخطوة 2: إرسال كود OTP
-                  await supabase.auth.signInWithOtp(email: email);
+                  // ✅ الخطوة 2: التحقق من وجود المستخدم في جدول users
+                  final response =
+                      await supabase
+                          .from('users')
+                          .select()
+                          .eq('user_id', user.id)
+                          .maybeSingle();
 
-                  // الخطوة 3: الانتقال لصفحة إدخال الكود
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder:
-                        (context) => Padding(
-                          padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom,
-                          ),
-                          child: VerifyOtpView(
-                            phone: '',
-                            isLogin: true,
-                            email: email,
-                            password: password,
-                          ),
-                        ),
+                  if (response == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('لا يوجد حساب مرتبط بهذا المستخدم'),
+                      ),
+                    );
+                    return;
+                  }
+
+                  // ✅ الخطوة 3: تسجيل الدخول ناجح → الانتقال للصفحة التالية
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => const LoginSuccessView()),
                   );
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(

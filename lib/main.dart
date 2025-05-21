@@ -13,6 +13,8 @@ void main() async {
   runApp(const PetGoApp());
 }
 
+final supabase = Supabase.instance.client;
+
 class PetGoApp extends StatelessWidget {
   const PetGoApp({super.key});
 

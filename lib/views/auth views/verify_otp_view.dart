@@ -1,21 +1,22 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:petgo_clone/views/auth%20views/login_success_view.dart';
-import 'package:petgo_clone/views/auth%20views/login_view.dart';
-import 'package:petgo_clone/widgets/custom_auth_widget.dart';
-import 'package:petgo_clone/widgets/custom_bottom.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter/gestures.dart';
 
-class VerifyOtpView extends StatelessWidget {
+import 'package:petgo_clone/views/auth%20views/login_success_view.dart';
+import 'package:petgo_clone/widgets/custom_auth_widget.dart';
+import 'package:petgo_clone/widgets/custom_bottom.dart';
+
+class VerifyOtpView extends StatefulWidget {
   const VerifyOtpView({
-    super.key,
+    Key? key,
     required this.phone,
     required this.isLogin,
     this.name,
     this.email,
     this.password,
-  });
+  }) : super(key: key);
 
   final String phone;
   final bool isLogin;
@@ -24,15 +25,19 @@ class VerifyOtpView extends StatelessWidget {
   final String? password;
 
   @override
+  State<VerifyOtpView> createState() => _VerifyOtpViewState();
+}
+
+class _VerifyOtpViewState extends State<VerifyOtpView> {
+  String token = '';
+  @override
   Widget build(BuildContext context) {
     final supabase = Supabase.instance.client;
-    TextEditingController otpController = TextEditingController();
 
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: const BoxDecoration(
         color: Colors.white,
-
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: SingleChildScrollView(
@@ -60,13 +65,11 @@ class VerifyOtpView extends StatelessWidget {
               const SizedBox(height: 8),
               const Text(
                 'أرسلنا لك رمز من ٦ أرقام على بريدك الإلكتروني',
-
                 style: TextStyle(color: Colors.grey, fontSize: 10),
               ),
               const SizedBox(height: 32),
               PinCodeTextField(
                 appContext: context,
-                controller: otpController,
                 length: 6,
                 obscureText: false,
                 animationType: AnimationType.fade,
@@ -81,53 +84,56 @@ class VerifyOtpView extends StatelessWidget {
                   selectedColor: Colors.amber,
                   activeColor: const Color(0xFF0A4543),
                 ),
-                onChanged: (value) {},
+                onChanged: (value) {
+                  setState(() {
+                    token = value;
+                  });
+                  print('token: $token');
+                },
               ),
               const SizedBox(height: 32),
               CustomButton(
                 title: 'تأكيد',
                 pressed: () async {
                   try {
+                    print('----------------------');
+                    print('Email: ${widget.email}');
+                    print('Token: ${token}');
+                    print('----------------------');
+
                     await supabase.auth.verifyOTP(
-                      type: OtpType.email,
-                      token: otpController.text,
-                      email: email!,
+                      type:
+                          OtpType
+                              .signup, // أو OtpType.email حسب اللي استخدمتيه لإرسال الكود
+                      token: token,
+                      email: widget.email!,
                     );
 
-                    if (!isLogin) {
-                      // إذا تسجيل جديد → نحفظ البيانات
+                    if (!widget.isLogin) {
                       final user = supabase.auth.currentUser;
                       await supabase.from('users').insert({
                         'user_id': user?.id,
-                        'username': name,
-                        'email': email,
-                        'number': phone.toString(),
+                        'username': widget.name,
+                        'email': widget.email,
+                        'number': widget.phone,
                       });
-
-                      // ثم ننتقل إلى صفحة تسجيل الدخول
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (_) => const LoginView()),
-                        (route) => false,
-                      );
-                    } else {
-                      // إذا تسجيل دخول → ننتقل إلى الصفحة الرئيسية أو نجاح
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const LoginSuccessView(),
-                        ),
-                        (route) => false,
-                      );
                     }
+
+                    // تنقل مباشر من السياق الخارجي
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (_) => const LoginSuccessView(),
+                      ),
+                    );
+                    print('login success');
                   } catch (e) {
+                    print('فشل التحقق: $e');
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('فشل التحقق: ${e.toString()}')),
                     );
                   }
                 },
               ),
-
               const SizedBox(height: 24),
               RichText(
                 textDirection: TextDirection.rtl,
@@ -148,9 +154,8 @@ class VerifyOtpView extends StatelessWidget {
                               try {
                                 await supabase.auth.resend(
                                   type: OtpType.email,
-                                  email: email!,
+                                  email: widget.email!,
                                 );
-
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text('تم إعادة الإرسال'),
@@ -158,11 +163,7 @@ class VerifyOtpView extends StatelessWidget {
                                 );
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'خطأ في الإرسال: ${e.toString()}',
-                                    ),
-                                  ),
+                                  SnackBar(content: Text('خطأ في الإرسال: $e')),
                                 );
                               }
                             },

@@ -226,9 +226,10 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                       }
 
                       try {
-                        await supabase.auth.signInWithOtp(
-                          email: email,
-                        ); // ✅ يرسل كود إلى البريد
+                        await supabase.auth.signInWithOtp(email: email);
+
+                        final mainContext =
+                            context; // خزن نسخة من الكونتكست الخارجي
 
                         showModalBottomSheet(
                           context: context,
