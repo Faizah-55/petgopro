@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:petgo_clone/theme/app_theme.dart';
 import 'package:petgo_clone/views/auth%20views/create_account_view.dart';
-import 'package:petgo_clone/views/auth%20views/verify_otp_view.dart';
-import 'package:petgo_clone/widgets/custom_bottom.dart';
+import 'package:petgo_clone/views/user%20views/address_view.dart';
+import 'package:petgo_clone/widgets/custom_buttom.dart';
 import 'package:petgo_clone/widgets/custom_textfelid_widget.dart';
 import 'package:petgo_clone/widgets/custom_auth_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -14,34 +15,32 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  final supabase = Supabase.instance.client;
-
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController(); // ✅
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final supabase = Supabase.instance.client;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F9F8),
+      backgroundColor: AppTheme.backgroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             const SizedBox(height: 80),
-            const Center(
+            Center(
               child: Text(
                 'اهلا بعودتك',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                  color: Color(0xFF0A4543),
+                style: AppTheme.font24Bold.copyWith(
+                  color: AppTheme.primaryColor,
                 ),
               ),
             ),
             const SizedBox(height: 24),
 
-            /// حقل الإيميل
+            // البريد الإلكتروني
             CustomTextfeildWidget(
               title: 'البريد الإلكتروني',
               controller: emailController,
@@ -51,20 +50,23 @@ class _LoginViewState extends State<LoginView> {
               secureText: false,
               prefixWidget: const Icon(
                 Icons.email_outlined,
-                color: Colors.amber,
+                color: AppTheme.yellowColor,
               ),
             ),
+            const SizedBox(height: 20),
 
-            /// حقل كلمة المرور
+            // كلمة المرور
             CustomTextfeildWidget(
               title: 'كلمة المرور',
               controller: passwordController,
               hintText: 'أدخل كلمة المرور',
               secureText: true,
               textAlign: TextAlign.right,
-              prefixWidget: const Icon(Icons.lock_outline, color: Colors.amber),
+              prefixWidget: const Icon(
+                Icons.lock_outline,
+                color: AppTheme.yellowColor,
+              ),
             ),
-
             const SizedBox(height: 24),
 
             CustomAuthWidget(
@@ -77,7 +79,6 @@ class _LoginViewState extends State<LoginView> {
                 );
               },
             ),
-
             const SizedBox(height: 8),
 
             CustomAuthWidget(
@@ -89,9 +90,9 @@ class _LoginViewState extends State<LoginView> {
                 );
               },
             ),
-
             const SizedBox(height: 24),
 
+            // زر تسجيل الدخول
             CustomButton(
               title: 'التالي',
               pressed: () async {
@@ -115,41 +116,25 @@ class _LoginViewState extends State<LoginView> {
                 }
 
                 try {
-                  // الخطوة 1: التحقق من الإيميل والباسوورد
-                  final AuthResponse loginResponse = await supabase.auth
-                      .signInWithPassword(email: email, password: password);
+                  await supabase.auth.signInWithPassword(
+                    email: email,
+                    password: password,
+                  );
 
-                  if (loginResponse.user == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('فشل تسجيل الدخول')),
-                    );
-                    return;
-                  }
+                  // ✅ تسجيل دخول ناجح
+                  print("✅ تسجيل دخول ناجح");
 
-                  // الخطوة 2: إرسال كود OTP
-                  await supabase.auth.signInWithOtp(email: email);
-
-                  // الخطوة 3: الانتقال لصفحة إدخال الكود
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder:
-                        (context) => Padding(
-                          padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom,
-                          ),
-                          child: VerifyOtpView(
-                            phone: '',
-                            isLogin: true,
-                            email: email,
-                            password: password,
-                          ),
-                        ),
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (_) => const AddressView()),
+                    (route) => false,
                   );
                 } catch (e) {
+                  print('❌ خطأ في تسجيل الدخول: $e');
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('خطأ: ${e.toString()}')),
+                    const SnackBar(
+                      content: Text('البريد الإلكتروني أو كلمة المرور غير صحيحة'),
+                    ),
                   );
                 }
               },

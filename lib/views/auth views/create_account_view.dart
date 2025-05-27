@@ -1,9 +1,10 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:petgo_clone/theme/app_theme.dart';
 import 'package:petgo_clone/views/auth%20views/login_view.dart';
 import 'package:petgo_clone/views/auth%20views/verify_otp_view.dart';
 import 'package:petgo_clone/widgets/custom_auth_widget.dart';
-import 'package:petgo_clone/widgets/custom_bottom.dart';
+import 'package:petgo_clone/widgets/custom_buttom.dart';
 import 'package:petgo_clone/widgets/custom_textfelid_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -25,13 +26,14 @@ class _CreateAccountViewState extends State<CreateAccountView> {
       TextEditingController();
 
   bool agreed = false;
-
   bool arePasswordsVisible = true;
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F9F8),
+      backgroundColor: AppTheme.backgroundColor,
       body: SingleChildScrollView(
         child: Center(
           child: ConstrainedBox(
@@ -42,52 +44,19 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   const SizedBox(height: 80),
-                  const Center(
+
+                  Center(
                     child: Text(
                       'سجّل حساب جديد',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                        color: Color(0xFF0A4543),
+                      style: AppTheme.font24Bold.copyWith(
+                        color: AppTheme.primaryColor,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  CustomTextfeildWidget(
-                    title: 'رقم الجوال',
-                    controller: phoneController,
-                    keyboardType: TextInputType.phone,
-                    secureText: false,
-                    textAlign: TextAlign.right,
-                    prefixWidget: CountryCodePicker(
-                      onChanged: (code) {
-                        print('رمز الدولة: ${code.dialCode}');
-                      },
-                      initialSelection: 'SA',
-                      favorite: ['+966', 'SA'],
-                      showFlag: true,
-                      showDropDownButton: true,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  RichText(
-                    textDirection: TextDirection.rtl,
-                    textAlign: TextAlign.right,
-                    text: TextSpan(
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                      text: 'أدخل ٩ أرقام تبدأ بـ ٥ - ',
 
-                      children: [
-                        TextSpan(
-                          text: 'مثال:  ٥XXXXXXXX ',
-
-                          style: TextStyle(fontWeight: FontWeight.normal),
-                        ),
-                      ],
-                    ),
-                  ),
                   const SizedBox(height: 24),
+
                   CustomTextfeildWidget(
                     title: 'الاسم',
                     controller: nameController,
@@ -96,26 +65,65 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                     textAlign: TextAlign.right,
                     prefixWidget: const Icon(
                       Icons.person_outline,
-                      color: Colors.amber,
+                      color: AppTheme.yellowColor,
                     ),
                   ),
+                  const SizedBox(height: 20),
+
+                  CustomTextfeildWidget(
+                    title: 'رقم الجوال',
+                    controller: phoneController,
+                    keyboardType: TextInputType.phone,
+                    secureText: false,
+                    textAlign: TextAlign.right,
+                    prefixWidget: CountryCodePicker(
+                      onChanged:
+                          (code) => print('رمز الدولة: ${code.dialCode}'),
+                      initialSelection: 'SA',
+                      favorite: ['+966', 'SA'],
+                      showFlag: true,
+                      showDropDownButton: true,
+                    ),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  RichText(
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.right,
+                    text: TextSpan(
+                      style: AppTheme.font12Regular.copyWith(
+                        color: AppTheme.grayColor,
+                      ),
+                      text: 'أدخل ٩ أرقام تبدأ بـ ٥ - ',
+                      children: [
+                        TextSpan(
+                          text: 'مثال:  ٥XXXXXXXX',
+                          style: AppTheme.font12Regular,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
                   CustomTextfeildWidget(
                     title: 'البريد الإلكتروني',
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
+                    textAlign: TextAlign.right,
                     hintText: 'example@email.com',
-                    textAlign: TextAlign.left,
                     secureText: false,
                     prefixWidget: const Icon(
                       Icons.email_outlined,
-                      color: Colors.amber,
+                      color: AppTheme.yellowColor,
                     ),
                   ),
+                  const SizedBox(height: 20),
+
                   CustomTextfeildWidget(
                     title: 'كلمة المرور',
                     controller: passwordController,
                     hintText: '٨ أحرف أو أكثر - حروف وأرقام',
-
                     textAlign: TextAlign.right,
                     secureText: !arePasswordsVisible,
                     isPassword: true,
@@ -126,14 +134,16 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                       });
                     },
                   ),
-                  const SizedBox(height: 16),
+
+                  const SizedBox(height: 20),
+
                   CustomTextfeildWidget(
                     title: 'تأكيد كلمة المرور',
                     controller: confirmPasswordController,
                     hintText: '٨ أحرف أو أكثر - حروف وأرقام',
                     textAlign: TextAlign.right,
                     secureText: !arePasswordsVisible,
-                    isPassword: true, // عشان العين تظهر
+                    isPassword: true,
                     isPasswordVisible: arePasswordsVisible,
                     toggleVisibility: () {
                       setState(() {
@@ -142,30 +152,63 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                     },
                   ),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
+
                   Row(
                     textDirection: TextDirection.rtl,
                     children: [
-                      Checkbox(
-                        value: agreed,
-                        activeColor: const Color(0xFF0A4543),
-                        onChanged: (value) {
-                          setState(() {
-                            agreed = value!;
-                          });
-                        },
+                      SizedBox(
+                        width: 10,
+                        height: 10,
+                        child: Checkbox(
+                          value: agreed,
+                          onChanged: (value) {
+                            setState(() {
+                              agreed = value!;
+                            });
+                          },
+                          activeColor: AppTheme.grayColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            side: const BorderSide(
+                              color: AppTheme.borderColor,
+                              width: 1,
+                            ),
+                          ),
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          visualDensity: VisualDensity.compact,
+                        ),
                       ),
-                      const Expanded(
-                        child: Text(
-                          'بالمتابعة، أنت توافق على الشروط وسياسة الخصوصية',
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: RichText(
                           textDirection: TextDirection.rtl,
-                          style: TextStyle(color: Colors.amber, fontSize: 13),
                           textAlign: TextAlign.right,
+                          text: TextSpan(
+                            style: AppTheme.font12Regular,
+                            children: [
+                              TextSpan(
+                                text: 'بالمتابعة، أنت توافق على ',
+                                style: AppTheme.font12Regular.copyWith(
+                                  color: AppTheme.primaryColor,
+                                ),
+                              ),
+                              TextSpan(
+                                text: 'الشروط وسياسة الخصوصية',
+                                style: AppTheme.font12Regular.copyWith(
+                                  color: AppTheme.yellowColor,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 16),
+
                   CustomAuthWidget(
                     question: 'عندك حساب؟',
                     title: 'سجل دخولك',
@@ -178,16 +221,23 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                       );
                     },
                   ),
+
                   const SizedBox(height: 8),
+
                   CustomAuthWidget(
                     question: 'واجهت مشكلة؟',
                     title: 'تواصل معنا نساعدك',
                     pressed: () {
-                      // يمكنك إضافة صفحة دعم لاحقًا هنا
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('سيتم تفعيل الدعم لاحقًا'),
+                        ),
+                      );
                     },
                   ),
 
                   const SizedBox(height: 24),
+
                   CustomButton(
                     title: 'التالي',
                     pressed: () async {
@@ -226,29 +276,34 @@ class _CreateAccountViewState extends State<CreateAccountView> {
                       }
 
                       try {
-                        await supabase.auth.signInWithOtp(
+                        final res = await supabase.auth.signUp(
                           email: email,
-                        ); // ✅ يرسل كود إلى البريد
-
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder:
-                              (context) => Padding(
-                                padding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom,
-                                ),
-                                child: VerifyOtpView(
-                                  phone: phone,
-                                  isLogin: false,
-                                  name: name,
-                                  email: email,
-                                  password: password,
-                                ),
-                              ),
+                          password: password,
                         );
+
+                        if (res.user != null) {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder:
+                                (context) => Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom:
+                                        MediaQuery.of(
+                                          context,
+                                        ).viewInsets.bottom,
+                                  ),
+                                  child: VerifyOtpView(
+                                    phone: phone,
+                                    isLogin: false,
+                                    name: name,
+                                    email: email,
+                                    password: password,
+                                  ),
+                                ),
+                          );
+                        }
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

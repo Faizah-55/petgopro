@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:petgo_clone/theme/app_theme.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
     required this.title,
     required this.pressed,
-    this.backgroundColor = const Color(0xFF0A4543),
-    this.textColor = Colors.white,
+    this.backgroundColor = AppTheme.primaryColor,
+    this.textColor = AppTheme.whiteColor,
   });
 
   final String title;
@@ -16,6 +17,8 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return SizedBox(
       width: double.infinity,
       height: 48,
@@ -30,7 +33,7 @@ class CustomButton extends StatelessWidget {
         ),
         child: Text(
           title,
-          style: TextStyle(
+          style: textTheme.bodyMedium?.copyWith(
             color: textColor,
             fontSize: 16,
             fontWeight: FontWeight.w600,

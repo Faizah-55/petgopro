@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:petgo_clone/views/auth%20views/login_success_view.dart';
-import 'package:petgo_clone/views/auth%20views/login_view.dart';
-import 'package:petgo_clone/widgets/custom_auth_widget.dart';
-import 'package:petgo_clone/widgets/custom_bottom.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:petgo_clone/theme/app_theme.dart';
+import 'package:petgo_clone/views/auth%20views/login_success_view.dart';
+import 'package:petgo_clone/widgets/custom_auth_widget.dart';
+import 'package:petgo_clone/widgets/custom_buttom.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter/gestures.dart';
 
-class VerifyOtpView extends StatelessWidget {
+class VerifyOtpView extends StatefulWidget {
   const VerifyOtpView({
     super.key,
     required this.phone,
@@ -24,15 +23,20 @@ class VerifyOtpView extends StatelessWidget {
   final String? password;
 
   @override
+  State<VerifyOtpView> createState() => _VerifyOtpViewState();
+}
+
+class _VerifyOtpViewState extends State<VerifyOtpView> {
+  TextEditingController otpController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
     final supabase = Supabase.instance.client;
-    TextEditingController otpController = TextEditingController();
 
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: const BoxDecoration(
         color: Colors.white,
-
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: SingleChildScrollView(
@@ -49,24 +53,21 @@ class VerifyOtpView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'ادخل رمز التحقق',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Color(0xFF0A4543),
+                style: AppTheme.font24Bold.copyWith(
+                  color: AppTheme.primaryColor,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'أرسلنا لك رمز من ٦ أرقام على بريدك الإلكتروني',
-
-                style: TextStyle(color: Colors.grey, fontSize: 10),
+                style: AppTheme.font14LightHint,
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
               PinCodeTextField(
                 appContext: context,
-                controller: otpController,
                 length: 6,
                 obscureText: false,
                 animationType: AnimationType.fade,
@@ -78,10 +79,12 @@ class VerifyOtpView extends StatelessWidget {
                   fieldHeight: 50,
                   fieldWidth: 45,
                   inactiveColor: Colors.grey.shade300,
-                  selectedColor: Colors.amber,
-                  activeColor: const Color(0xFF0A4543),
+                  selectedColor: AppTheme.yellowColor,
+                  activeColor: AppTheme.primaryColor,
                 ),
-                onChanged: (value) {},
+                onChanged: (value) {
+                  otpController.text = value;
+                },
               ),
               const SizedBox(height: 32),
               CustomButton(
@@ -91,27 +94,31 @@ class VerifyOtpView extends StatelessWidget {
                     await supabase.auth.verifyOTP(
                       type: OtpType.email,
                       token: otpController.text,
-                      email: email!,
+                      email: widget.email!,
                     );
 
-                    if (!isLogin) {
-                      // إذا تسجيل جديد → نحفظ البيانات
+                    await supabase.auth.signInWithPassword(
+                      email: widget.email!,
+                      password: widget.password!,
+                    );
+
+                    if (!widget.isLogin) {
                       final user = supabase.auth.currentUser;
                       await supabase.from('users').insert({
                         'user_id': user?.id,
-                        'username': name,
-                        'email': email,
-                        'number': phone.toString(),
+                        'username': widget.name,
+                        'email': widget.email,
+                        'number': widget.phone,
                       });
 
-                      // ثم ننتقل إلى صفحة تسجيل الدخول
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(builder: (_) => const LoginView()),
+                        MaterialPageRoute(
+                          builder: (_) => const LoginSuccessView(),
+                        ),
                         (route) => false,
                       );
                     } else {
-                      // إذا تسجيل دخول → ننتقل إلى الصفحة الرئيسية أو نجاح
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
@@ -127,54 +134,38 @@ class VerifyOtpView extends StatelessWidget {
                   }
                 },
               ),
-
               const SizedBox(height: 24),
-              RichText(
-                textDirection: TextDirection.rtl,
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
-                  children: [
-                    const TextSpan(text: 'لم يصلك الرمز؟ '),
-                    TextSpan(
-                      text: 'أعد الإرسال',
-                      style: const TextStyle(
-                        color: Colors.amber,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      recognizer:
-                          TapGestureRecognizer()
-                            ..onTap = () async {
-                              try {
-                                await supabase.auth.resend(
-                                  type: OtpType.email,
-                                  email: email!,
-                                );
+              CustomAuthWidget(
+                question: 'لم يصلك الرمز؟',
+                title: 'أعد الإرسال',
+                pressed: () async {
+                  try {
+                    await supabase.auth.resend(
+                      type: OtpType.email,
+                      email: widget.email!,
+                    );
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('تم إعادة الإرسال'),
-                                  ),
-                                );
-                              } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'خطأ في الإرسال: ${e.toString()}',
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
-                    ),
-                  ],
-                ),
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('تم إعادة الإرسال')),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('خطأ في الإرسال: ${e.toString()}'),
+                      ),
+                    );
+                  }
+                },
               ),
               const SizedBox(height: 4),
               CustomAuthWidget(
                 question: 'واجهت مشكلة؟',
                 title: 'تواصل معنا نساعدك',
-                pressed: () {},
+                pressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('سيتم تفعيل الدعم لاحقًا')),
+                  );
+                },
               ),
             ],
           ),

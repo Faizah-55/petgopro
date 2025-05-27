@@ -22,12 +22,19 @@ dependencies:
   shared_preferences: ^2.5.3
   introduction_screen: ^3.1.17
   pin_code_fields: ^8.0.0
+  lucide_icons: ^0.257.0
+  dropdown_button2: ^2.3.9
+  flutter_map: ^8.1.1
+  latlong2: ^0.9.1
+  location: ^8.0.0
+
+
 flutter:
   uses-material-design: true
   assets:
-    - assets/logo_petgo.png
-    - assets/onboarding1.png
-    - assets/onboarding2.png
-    - assets/onboarding3.png
-    - assets/onboarding4.png
+
+    - assets/app_img/
+    - assets/icons/
+    - assets/logo/
+
 
