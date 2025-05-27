@@ -1,54 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:introduction_screen/introduction_screen.dart';
-import 'package:petgo_clone/views/auth%20views/create_account_view.dart';
+import 'package:petgo_clone/theme/app_theme.dart';
 import 'package:petgo_clone/views/auth%20views/login_view.dart';
-
-import 'package:petgo_clone/widgets/custom_bottom.dart';
+import 'package:petgo_clone/widgets/custom_buttom.dart';
+import 'package:introduction_screen/introduction_screen.dart';
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
 
   @override
-  OnBoardingViewState createState() => OnBoardingViewState();
+  State<OnboardingView> createState() => OnboardingViewState();
 }
 
-class OnBoardingViewState extends State<OnboardingView> {
+class OnboardingViewState extends State<OnboardingView> {
   final introKey = GlobalKey<IntroductionScreenState>();
   int currentPage = 0;
 
-  void _onIntroEnd(context) {
-    Navigator.of(
-      context,
-    ).pushReplacement(MaterialPageRoute(builder: (_) => const LoginView()));
+  void _onIntroEnd(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const LoginView()),
+    );
   }
 
   Widget _buildImage(String assetName, [double width = 379]) {
-    return Image.asset('assets/$assetName', width: width);
+    return Image.asset('assets/app_img/$assetName', width: width);
   }
 
   @override
   Widget build(BuildContext context) {
-    const bodyStyle = TextStyle(fontSize: 18.0);
+    final textTheme = Theme.of(context).textTheme;
 
     final pageDecoration = PageDecoration(
-      titleTextStyle: const TextStyle(
+      titleTextStyle: textTheme.bodyLarge!.copyWith(
         fontSize: 24,
-        height: 32 / 24,
-        letterSpacing: 0,
         fontWeight: FontWeight.w700,
+        height: 32 / 24,
       ),
-      bodyTextStyle: GoogleFonts.changa(
+      bodyTextStyle: textTheme.bodyMedium!.copyWith(
         fontSize: 18,
         fontWeight: FontWeight.w500,
+        height: 26 / 18,
       ),
-      bodyPadding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-      imagePadding: const EdgeInsets.only(top: 80.0),
+      bodyPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      imagePadding: const EdgeInsets.only(top: 80),
     );
 
     return IntroductionScreen(
       key: introKey,
-      globalBackgroundColor: Colors.white,
+      globalBackgroundColor: AppTheme.backgroundColor,
+
+      // ✅ الزر السفلي
       globalFooter: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
         child: Column(
@@ -64,40 +64,36 @@ class OnBoardingViewState extends State<OnboardingView> {
                 }
               },
             ),
-
             const SizedBox(height: 12),
-
             if (currentPage > 0)
               CustomButton(
                 title: 'السابق',
-                textColor: Color(0xFF0A4543),
-                pressed: () {
-                  introKey.currentState?.previous();
-                },
+                textColor: AppTheme.primaryColor,
                 backgroundColor: const Color(0xFFD9EEED),
+                pressed: () => introKey.currentState?.previous(),
               ),
           ],
         ),
       ),
 
+      // ✅ زر التخطي العلوي
       globalHeader: Align(
         alignment: Alignment.topRight,
         child: Padding(
           padding: const EdgeInsets.only(top: 44, right: 20),
-          child:
-              currentPage < 3
-                  ? TextButton(
-                    onPressed: () => _onIntroEnd(context),
-                    child: const Text(
-                      'تخطي',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF0A4543),
-                        fontSize: 16,
-                      ),
+          child: currentPage < 2
+              ? TextButton(
+                  onPressed: () => _onIntroEnd(context),
+                  child: Text(
+                    'تخطي',
+                    style: textTheme.bodyMedium?.copyWith(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.primaryColor,
                     ),
-                  )
-                  : const SizedBox.shrink(),
+                  ),
+                )
+              : const SizedBox.shrink(),
         ),
       ),
 
@@ -109,46 +105,42 @@ class OnBoardingViewState extends State<OnboardingView> {
 
       onDone: () => _onIntroEnd(context),
       onSkip: () => _onIntroEnd(context),
-
-      onChange: (index) {
-        setState(() {
-          currentPage = index;
-        });
-      },
+      onChange: (index) => setState(() => currentPage = index),
 
       pages: [
         PageViewModel(
-          title: " !كل احتياجاتهم... في مكان واحد",
-          body: "من أكل لألعاب، لمستلزمات طبية\n كل اللي يحتاجه حيوانك متوفر",
+          title: '!كل احتياجاتهم... في مكان واحد',
+          body: 'من أكل لألعاب، لمستلزمات طبية\nكل اللي يحتاجه حيوانك متوفر',
           image: _buildImage('onboarding1.png'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "!كل مستلزماتهم توصل لين عندك",
-          body: "خدمة توصيل سريعة وموثوقة\n بدون تعب أو مشاوير",
+          title: '!كل مستلزماتهم توصل لين عندك',
+          body: 'خدمة توصيل سريعة وموثوقة\nبدون تعب أو مشاوير',
           image: _buildImage('onboarding2.png'),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "جاهز تبدأ؟",
-          body: "...ابدأ معنا بخطوة بسيطة\nوحيواناتك بتشكرك لاحقًا",
+          title: 'جاهز تبدأ؟',
+          body: 'ابدأ معنا بخطوة بسيطة\nوحيواناتك بتشكرك لاحقًا',
           image: _buildImage('onboarding3.png'),
           decoration: pageDecoration,
         ),
       ],
 
+      // ✅ نقاط المؤشر
       dotsDecorator: const DotsDecorator(
-        size: Size(10.0, 10.0),
+        size: Size(10, 10),
         color: Color(0xFFE0E0E0),
-        activeColor: Color(0xFF0A4543),
-        activeSize: Size(24.0, 10.0),
+        activeColor: AppTheme.primaryColor,
+        activeSize: Size(24, 10),
         activeShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(25.0)),
+          borderRadius: BorderRadius.all(Radius.circular(25)),
         ),
       ),
       dotsContainerDecorator: const ShapeDecoration(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
       ),
     );
