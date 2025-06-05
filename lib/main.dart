@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:petgo_clone/provider/cart_provider.dart';
 import 'package:petgo_clone/theme/app_theme.dart';
 import 'package:petgo_clone/views/auth%20views/login_success_view.dart';
 import 'package:petgo_clone/views/splash_view.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,16 +19,20 @@ void main() async {
 class PetGoApp extends StatelessWidget {
   const PetGoApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      locale: const Locale('ar'),
-      title: 'PetGo',
 
-      // هنا نحدد شاشة البداية
-      home: const SplashView(),
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
+// تم تمرير البروفايدر 
+
+@override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => CartProvider(),
+      child: MaterialApp(
+        locale: const Locale('ar'),
+        title: 'PetGo',
+        home: const SplashView(),
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:petgo_clone/theme/app_theme.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextfeildWidget extends StatelessWidget {
   const CustomTextfeildWidget({
@@ -15,6 +16,7 @@ class CustomTextfeildWidget extends StatelessWidget {
     this.suffixWidget,
     this.isPasswordVisible,
     this.toggleVisibility,
+    this.inputFormatters,
   });
 
   final String title;
@@ -28,6 +30,7 @@ class CustomTextfeildWidget extends StatelessWidget {
   final Widget? suffixWidget;
   final bool? isPasswordVisible;
   final VoidCallback? toggleVisibility;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +52,7 @@ class CustomTextfeildWidget extends StatelessWidget {
           textDirection: TextDirection.rtl,
           obscureText: secureText,
           keyboardType: keyboardType,
+          inputFormatters : inputFormatters,
           style: AppTheme.font14Regular.copyWith(
             fontWeight: FontWeight.w400,
             color: AppTheme.primaryColor,
