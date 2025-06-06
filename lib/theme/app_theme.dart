@@ -13,11 +13,54 @@ class AppTheme {
   static const Color hintTextColor = Color(0xFF717680);
 
   // --- Custom text styles ---
+
+  static TextStyle get font10Regular => GoogleFonts.changa(
+    fontSize: 10.41,
+    fontWeight: FontWeight.w400,
+    height: 1.4,
+  );
+
+  static TextStyle get font10Medium => GoogleFonts.changa(
+    fontSize: 10,
+    fontWeight: FontWeight.w500,
+    height: 20 ,
+  );
+
+   static TextStyle get font10SemiBold => GoogleFonts.changa(
+    fontSize: 10,
+    fontWeight: FontWeight.w600,
+    height: 1.4,
+  );
+
   static TextStyle get font12Regular => GoogleFonts.changa(
     fontSize: 12,
     fontWeight: FontWeight.w400,
     height: 1.4,
   );
+
+  static TextStyle get font12Medium => GoogleFonts.changa(
+    fontSize: 12.6,
+    fontWeight: FontWeight.w500,
+    height: 1.4,
+  );
+
+  static TextStyle get font12SemiBold => GoogleFonts.changa(
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    height: 1.4,
+  );
+
+  static TextStyle get font13Regular => GoogleFonts.changa(
+  fontSize: 13,
+  fontWeight: FontWeight.w400,
+  height: 1.4,
+);
+
+static TextStyle get font13SemiBold => GoogleFonts.changa(
+  fontSize: 13.77,         
+  fontWeight: FontWeight.w600,  
+  height: 1.4,           
+);
 
   static TextStyle get font14Regular => GoogleFonts.changa(
     fontSize: 14,
@@ -42,15 +85,29 @@ class AppTheme {
     height: 20 / 14,
     color: hintTextColor,
   );
-  static TextStyle get font24Bold => GoogleFonts.changa(
-    fontSize: 24,
-    fontWeight: FontWeight.w700,
-    height: 32 / 24,
-  );
+ 
   static TextStyle get font14Medium => GoogleFonts.changa(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     height: 26 / 14,
+  );
+
+  static TextStyle get font16Medium => GoogleFonts.changa(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    height: 24 / 16,
+  );
+
+  static TextStyle get font16SemiBold => GoogleFonts.changa(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    height: 1.4,
+  );
+
+  static TextStyle get font18SemiBold => GoogleFonts.changa(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    height: 1.4,
   );
 
   static TextStyle get font20SemiBold => GoogleFonts.changa(
@@ -59,6 +116,12 @@ class AppTheme {
   height: 28 / 20,
   color: primaryColor,
 );
+
+ static TextStyle get font24Bold => GoogleFonts.changa(
+    fontSize: 24,
+    fontWeight: FontWeight.w700,
+    height: 32 / 24,
+  );
 
   static ThemeData get lightTheme => ThemeData(
     primaryColor: primaryColor,

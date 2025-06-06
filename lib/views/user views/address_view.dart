@@ -14,8 +14,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class AddressView extends StatefulWidget {
   final bool isEditing;
   final Function(LatLng, String)? onLocationSaved;
+  final bool? fromPayment;
 
-  const AddressView({super.key, this.isEditing = false, this.onLocationSaved});
+  const AddressView({super.key,
+   this.isEditing = false, 
+   this.onLocationSaved,
+   this.fromPayment
+    });
 
   @override
   State<AddressView> createState() => _AddressViewState();
@@ -116,7 +121,7 @@ class _AddressViewState extends State<AddressView> {
 
                 if (widget.isEditing && widget.onLocationSaved != null) {
                   widget.onLocationSaved!(selectedLatLng, name);
-                  Navigator.pop(context);
+                  Navigator.pop(context, true);
                 } else {
                   await Supabase.instance.client
                       .from('users')
@@ -129,6 +134,10 @@ class _AddressViewState extends State<AddressView> {
                         'user_id',
                         Supabase.instance.client.auth.currentUser!.id,
                       );
+                      if (widget.fromPayment == true){
+                        Navigator.pop(context);
+                        return;
+                      }
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (_) => const BottomNavUser()),
