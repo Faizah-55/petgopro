@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:petgo_clone/provider/cart_provider.dart';
-import 'package:petgo_clone/theme/app_theme.dart';
 import 'package:petgo_clone/views/user%20views/address_view.dart';
-import 'package:petgo_clone/views/user%20views/cart_view.dart';
 import 'package:petgo_clone/views/user%20views/moyasar_payment_view.dart';
 import 'package:petgo_clone/widgets/custom_appbarr.dart';
 import 'package:petgo_clone/widgets/custom_bottom_section%20.dart';
@@ -45,8 +42,7 @@ LatLng? userLocation;
         .eq('user_id', userId)
         .single();
 
-    if (response != null &&
-        response['latitude'] != null &&
+    if (response['latitude'] != null &&
         response['longitude'] != null) {
       setState(() {
         userLocation = LatLng(
@@ -99,9 +95,9 @@ LatLng? userLocation;
 
                     SectionRowWidge(
                       type: SectionRowType.titleWithIconAndTime,
-                      title: 'الوقت',
+                      title: 'المدة',
                       icon: Icons.access_time,
-                      timeText: '11:30 - 11:00',
+                      timeText: '30 - 40',
                       showDivider: true,
                     ),
                     const SizedBox(height: 12),

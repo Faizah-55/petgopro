@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:petgo_clone/admin%20view/admin_home_view.dart';
 import 'package:petgo_clone/theme/app_theme.dart';
 import 'package:petgo_clone/views/auth%20views/create_account_view.dart';
 import 'package:petgo_clone/views/user%20views/address_view.dart';
@@ -93,6 +94,7 @@ class _LoginViewState extends State<LoginView> {
             const SizedBox(height: 24),
 
             // زر تسجيل الدخول
+            // زر تسجيل الدخول
             CustomButton(
               title: 'التالي',
               pressed: () async {
@@ -124,16 +126,29 @@ class _LoginViewState extends State<LoginView> {
                   // ✅ تسجيل دخول ناجح
                   print("✅ تسجيل دخول ناجح");
 
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (_) => const AddressView()),
-                    (route) => false,
-                  );
+                  final user = Supabase.instance.client.auth.currentUser;
+
+                  // 🔒 تحقق من إذا هو الأدمن
+                  if (user != null && user.email == 'admin@petgo.com') {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AdminHomeView()),
+                      (route) => false,
+                    );
+                  } else {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AddressView()),
+                      (route) => false,
+                    );
+                  }
                 } catch (e) {
                   print('❌ خطأ في تسجيل الدخول: $e');
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('البريد الإلكتروني أو كلمة المرور غير صحيحة'),
+                      content: Text(
+                        'البريد الإلكتروني أو كلمة المرور غير صحيحة',
+                      ),
                     ),
                   );
                 }

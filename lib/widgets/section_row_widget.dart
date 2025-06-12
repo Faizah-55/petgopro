@@ -1,21 +1,14 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:petgo_clone/theme/app_theme.dart';
 
-
-// تصميم صف مع حد 
-// يعرض نص و سعر
-// استخدم في صفحة السلة و الدفع 
-
 enum SectionRowType {
-  titleWithPriceAndIcon,   // نص و سعر 
-  headerText,              // فقط عنوان بتنسيق خاص
-  titleWithIconAndTime,    // نص + وقت + أيقونة
-  mapWithTitleAndButton,   //  خريطة + صف تحته
-  titleWithButton,         // نص يمين + زر يسار
+  titleWithPriceAndIcon,    // نص و سعر 
+  headerText,               // فقط عنوان بتنسيق خاص
+  titleWithIconAndTime,     // نص + وقت + أيقونة
+  mapWithTitleAndButton,    // خريطة + صف تحته
+  titleWithButton,          // نص يمين + زر يسار
+  titleWithTextAndIcon,     // نص يمين + نص يسار + أيقونة (جديد)
 }
-
 
 class SectionRowWidge extends StatelessWidget {
   final SectionRowType type;
@@ -28,12 +21,13 @@ class SectionRowWidge extends StatelessWidget {
   final bool showPrice;
   final bool showIcon;
   final String? timeText;
-
   final Widget? mapWidget;
   final Widget? customButton;
+  final bool showTopDivider;
+  final String? trailingText;
 
   const SectionRowWidge({
-    Key? key,
+    super.key,
     required this.type,
     required this.title,
     this.price,
@@ -45,7 +39,9 @@ class SectionRowWidge extends StatelessWidget {
     this.timeText,
     this.mapWidget,
     this.customButton,
-  }) : super(key: key);
+    this.showTopDivider = false,
+    this.trailingText,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +55,7 @@ class SectionRowWidge extends StatelessWidget {
             Text(
               title,
               style: textStyle ?? AppTheme.font16SemiBold.copyWith(color: AppTheme.primaryColor),
-               textDirection: TextDirection.rtl,
-
+              textDirection: TextDirection.rtl,
             ),
             if (showPrice && price != null)
               Row(
@@ -83,7 +78,7 @@ class SectionRowWidge extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: Text(
             title,
-            style: textStyle?? AppTheme.font18SemiBold.copyWith(color: AppTheme.primaryColor),
+            style: textStyle ?? AppTheme.font18SemiBold.copyWith(color: AppTheme.primaryColor),
           ),
         );
         break;
@@ -121,7 +116,7 @@ class SectionRowWidge extends StatelessWidget {
                 color: Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: mapWidget ?? Center(child: Text('الخريطة هنا')),
+              child: mapWidget ?? const Center(child: Text('الخريطة هنا')),
             ),
             const SizedBox(height: 8),
             Row(
@@ -150,10 +145,40 @@ class SectionRowWidge extends StatelessWidget {
           ],
         );
         break;
+
+      case SectionRowType.titleWithTextAndIcon:
+        content = Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: textStyle ?? AppTheme.font16SemiBold.copyWith(color: AppTheme.primaryColor),
+              textDirection: TextDirection.rtl,
+            ),
+            Row(
+              children: [
+                if (icon != null)
+                  Icon(icon, size: 20, color: AppTheme.yellowColor),
+                const SizedBox(width: 4),
+                Text(
+                  trailingText ?? '',
+                  style: AppTheme.font14Medium.copyWith(color: AppTheme.primaryColor),
+                ),
+              ],
+            ),
+          ],
+        );
+        break;
     }
 
     return Column(
       children: [
+        if (showTopDivider)
+          Container(
+            height: 1,
+            width: double.infinity,
+            color: AppTheme.borderColor,
+          ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: content,
@@ -161,7 +186,8 @@ class SectionRowWidge extends StatelessWidget {
         if (showDivider)
           Container(
             height: 1,
-            width: double.infinity,color: AppTheme.borderColor,
+            width: double.infinity,
+            color: AppTheme.borderColor,
           ),
       ],
     );

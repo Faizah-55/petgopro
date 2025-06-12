@@ -16,11 +16,12 @@ class AddressView extends StatefulWidget {
   final Function(LatLng, String)? onLocationSaved;
   final bool? fromPayment;
 
-  const AddressView({super.key,
-   this.isEditing = false, 
-   this.onLocationSaved,
-   this.fromPayment
-    });
+  const AddressView({
+    super.key,
+    this.isEditing = false,
+    this.onLocationSaved,
+    this.fromPayment,
+  });
 
   @override
   State<AddressView> createState() => _AddressViewState();
@@ -29,7 +30,7 @@ class AddressView extends StatefulWidget {
 class _AddressViewState extends State<AddressView> {
   final TextEditingController nameController = TextEditingController();
   final MapController mapController = MapController();
-  LatLng selectedLatLng = LatLng(21.3555, 39.9840); // الموقع الابتدائي: مكة
+  LatLng selectedLatLng = LatLng(21.3555, 39.9840); // مكة مبدئياً
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +40,10 @@ class _AddressViewState extends State<AddressView> {
         rightButton: SquareIconButton(
           icon: widget.isEditing ? Icons.arrow_back : Icons.close,
           onPressed: () {
-            if (widget.isEditing) {
-              Navigator.pop(context);
+            if (widget.fromPayment == true) {
+              Navigator.pop(context); // يرجع لصفحة الدفع
+            } else if (widget.isEditing) {
+              Navigator.pop(context); // يرجع للمحرر
             } else {
               Navigator.pushAndRemoveUntil(
                 context,
@@ -53,6 +56,7 @@ class _AddressViewState extends State<AddressView> {
       ),
       body: Column(
         children: [
+          // ✅ الخريطة
           Expanded(
             child: FlutterMap(
               mapController: mapController,
@@ -67,9 +71,7 @@ class _AddressViewState extends State<AddressView> {
               ),
               children: [
                 TileLayer(
-                  urlTemplate:
-                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  subdomains: const ['a', 'b', 'c'],
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                   userAgentPackageName: 'com.example.petgo',
                 ),
                 MarkerLayer(
@@ -89,6 +91,8 @@ class _AddressViewState extends State<AddressView> {
               ],
             ),
           ),
+
+          // ✅ حقل اسم الموقع
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -104,6 +108,8 @@ class _AddressViewState extends State<AddressView> {
               hintText: 'أعطِ هذا الموقع اسم',
             ),
           ),
+
+          // ✅ زر التأكيد
           CustomBottomSection(
             child: CustomButton(
               title: 'تأكيد الموقع',
@@ -134,15 +140,16 @@ class _AddressViewState extends State<AddressView> {
                         'user_id',
                         Supabase.instance.client.auth.currentUser!.id,
                       );
-                      if (widget.fromPayment == true){
-                        Navigator.pop(context);
-                        return;
-                      }
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (_) => const BottomNavUser()),
-                    (route) => false,
-                  );
+
+                  if (widget.fromPayment == true) {
+                    Navigator.pop(context); // نرجع لصفحة الدفع فقط
+                  } else {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (_) => const BottomNavUser()),
+                      (route) => false,
+                    );
+                  }
                 }
               },
             ),
