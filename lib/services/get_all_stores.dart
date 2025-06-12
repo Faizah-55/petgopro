@@ -21,7 +21,7 @@ Future<Store?> getStoreById(String storeId) async {
       .eq('store_id', storeId)
       .maybeSingle();
 
-  if (data == null || data is! Map<String, dynamic>) return null;
+  if (data == null) return null;
 
   return Store.fromJson(data);
 }
@@ -37,7 +37,7 @@ Future<Store?> getActiveStore() async {
       .eq('is_active', true)
       .maybeSingle();
 
-  if (data == null || data is! Map<String, dynamic>) return null;
+  if (data == null) return null;
 
   return Store.fromJson(data);
 }

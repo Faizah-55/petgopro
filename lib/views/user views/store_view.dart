@@ -14,13 +14,9 @@ import 'package:petgo_clone/widgets/custom_search_bar.dart';
 import 'package:petgo_clone/widgets/square_icon_button.dart';
 import 'package:petgo_clone/widgets/store_card_widget.dart';
 import 'package:petgo_clone/widgets/animal_taps_widget.dart';
-import 'package:petgo_clone/theme/app_theme.dart';
 import 'package:petgo_clone/widgets/sub_category_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-// صفحة المتجر 
-
 
 class StoreView extends StatefulWidget {
   final Store store;
@@ -32,25 +28,21 @@ class StoreView extends StatefulWidget {
 }
 
 class _StoreViewState extends State<StoreView> {
-late String storeId;
-
+  late String storeId;
   List<AnimalType> animalTypes = [];
   String? selectedAnimalId;
-
 
   List<SubCategory> subCategories = [];
   List<Product> allProducts = [];
 
   Map<String, List<Product>> productsBySubCategory = {};
-
-  Store? _store ;
+  Store? _store;
 
   @override
   void initState() {
     super.initState();
+    storeId = widget.store.id;
     fetchAnimalTypes();
-    // fetchAllProducts();
-     storeId = widget.store.id;
     fetchStoreData();
   }
 
@@ -69,7 +61,7 @@ late String storeId;
         if (animalTypes.isNotEmpty) {
           selectedAnimalId = animalTypes.first.id;
           fetchSubCategories(selectedAnimalId!);
-          fetchProducts(widget.store.id);
+          fetchProducts(storeId);
         }
       });
     } catch (error) {
@@ -90,29 +82,31 @@ late String storeId;
 
       setState(() {
         subCategories = loadedSubs;
-        groupProducts(); 
+        groupProducts();
       });
     } catch (e) {
       debugPrint('Exception fetching sub categories: $e');
     }
   }
 
+  void fetchStoreData() async {
+    final store = await getStoreById(storeId);
+    if (store != null) {
+      setState(() {
+        _store = store;
+      });
 
-void fetchStoreData() async {
-  final store = await getStoreById(storeId);
-  if (store != null) {
-    setState(() {
-      _store = store;
-    });
+      final cartProvider = Provider.of<CartProvider>(context, listen: false);
+      cartProvider.setDeliveryPrice(store.deliveryPrice);
 
-    final cartProvider = Provider.of<CartProvider>(context, listen: false);
-    cartProvider.setDeliveryPrice(store.deliveryPrice);
+      // 🟡 هنا نحفظ بيانات المتجر عند أول مرة فقط
+      if (cartProvider.storeName == null && cartProvider.storeUrl == null) {
+        cartProvider.setStoreInfo(name: store.name, url: store.logoUrl, id: store.id);
+      }
+    }
   }
-}
 
-
-Future<void> fetchProducts(String storeId) async {
-  
+  Future<void> fetchProducts(String storeId) async {
     final data = await Supabase.instance.client
         .from('products')
         .select()
@@ -121,24 +115,19 @@ Future<void> fetchProducts(String storeId) async {
     final loadedProducts =
         (data as List).map((json) => Product.fromJson(json)).toList();
 
-    final Map<String, List<Product>> map = {}; 
+    final Map<String, List<Product>> map = {};
     for (var product in loadedProducts) {
-      final key = product.subCategoryId ?? ''; 
-
+      final key = product.subCategoryId ?? '';
       if (key.isNotEmpty) {
-        if (!map.containsKey(key)) {
-          map[key] = []; 
-        }
-        map[key]!.add(product); 
+        map.putIfAbsent(key, () => []).add(product);
       }
     }
 
     setState(() {
       productsBySubCategory = map;
-      allProducts = loadedProducts; 
+      allProducts = loadedProducts;
     });
-}
-
+  }
 
   void groupProducts() {
     if (subCategories.isEmpty || allProducts.isEmpty) {
@@ -155,7 +144,7 @@ Future<void> fetchProducts(String storeId) async {
     }
 
     for (var product in allProducts) {
-      if (product.subCategoryId != null && map.containsKey(product.subCategoryId)) {
+      if (map.containsKey(product.subCategoryId)) {
         map[product.subCategoryId]!.add(product);
       }
     }
@@ -165,35 +154,12 @@ Future<void> fetchProducts(String storeId) async {
     });
   }
 
+  @override
+  Widget build(BuildContext context) {
+    final cartProvider = context.watch<CartProvider>();
 
-
-  Map<String, int> selectedProducts = {};
-
-  int get totalItems => selectedProducts.values.fold(0, (a,b) => a + b);
-
-  double get totalPrice {
-   double sum = 0.0;
-  for (var entry in selectedProducts.entries) {
-    Product? product;
-    try {
-      product = allProducts.firstWhere((p) => p.id == entry.key);
-    } catch (_) {
-      product = null;
-    }
-    if (product != null) {
-      sum += (product.price * entry.value);
-    }
-  }
-  return sum;
-}
-
-
-@override
-Widget build(BuildContext context) {
-  final cartProvider = context.watch<CartProvider>();
-
-  return Scaffold(
-    appBar: CustomAppBar(
+    return Scaffold(
+      appBar: CustomAppBar(
         showShadow: true,
         rightLogo: Image.asset(
           'assets/logo/logo_petgo.png',
@@ -201,107 +167,110 @@ Widget build(BuildContext context) {
           height: 31,
         ),
       ),
-    body: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                flex: 5,
-                child: SizedBox(
-                  height: 40,
-                  child: CustomSearchBar(
-                    hintText: 'ابحث عن منتج',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const SearchView(searchType: 'product'))
-                      );
-                    },
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: SizedBox(
+                    height: 40,
+                    child: CustomSearchBar(
+                      hintText: 'ابحث عن منتج',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) => const SearchView(searchType: 'product'),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              SizedBox(
-                width: 46,
-                height: 40,
-                child: Material(
-                  child: SquareIconButton(
-                  icon: Icons.arrow_forward,
-                      onPressed: () {
-              Navigator.pop(context);
-            }
-           ),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 46,
+                  height: 40,
+                  child: Material(
+                    child: SquareIconButton(
+                      icon: Icons.arrow_forward,
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            StoreCardWidget(
+              storeName: widget.store.name,
+              description: widget.store.description,
+              logoUrl: widget.store.logoUrl,
+              rating: widget.store.rating,
+              distanceKm: widget.store.distanceKm,
+              deliveryPrice: widget.store.deliveryPrice,
+              isLiked: false,
+              onLikePressed: () {},
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              height: 36,
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: animalTypes.length,
+                  itemBuilder: (context, index) {
+                    final animal = animalTypes[index];
+                    return AnimalTabWidget(
+                      title: animal.name,
+                      isSelected: animal.id == selectedAnimalId,
+                      onTap: () {
+                        setState(() {
+                          selectedAnimalId = animal.id;
+                          fetchSubCategories(selectedAnimalId!);
+                        });
+                      },
+                    );
+                  },
                 ),
               ),
-            ],
-          ),
-                    const SizedBox(height: 16),
-
-             StoreCardWidget(
-               storeName: widget.store.name,
-               description: widget.store.description,
-               logoUrl: widget.store.logoUrl,
-               rating: widget.store.rating,
-               distanceKm: widget.store.distanceKm,
-               deliveryPrice: widget.store.deliveryPrice,
-               isLiked: false,
-                  onLikePressed: () {},
-              ),
-          const SizedBox(height: 16),
-          SizedBox(
-            height: 36,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: animalTypes.length,
-                itemBuilder: (context, index) {
-                  final animal = animalTypes[index];
-                  return AnimalTabWidget(
-                    title: animal.name,
-                    isSelected: animal.id == selectedAnimalId,
-                    onTap: () {
-                      setState(() {
-                        selectedAnimalId = animal.id;
-                        fetchSubCategories(selectedAnimalId!);
-                      });
-                    },
-                  );
-                },
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: SubCategoryWidget(
+                  subCategories: subCategories,
+                  allProducts: allProducts,
+                  storeName: widget.store.name, // ✅ نمرر اسم المتجر
+                  storeUrl: widget.store.logoUrl, // ✅ نمرر رابط صورة المتجر                 
+                  storeId: storeId, // ✅ نمرر رابط صورة المتجر                 
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: SubCategoryWidget(
-                subCategories: subCategories,
-                allProducts: allProducts,
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-    bottomNavigationBar: cartProvider.totalItems > 0
-        ? CustomBottomSection(
-            child: CartSummaryButtonWidget(
-              type: CartButtonType.large,
-              itemCount: cartProvider.totalItems,
-              totalPrice: cartProvider.itemTotal,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CartView()),
-                );
-              },
-            ),
-          )
-        : null,
-  );
-}
+      bottomNavigationBar:
+          cartProvider.totalItems > 0
+              ? CustomBottomSection(
+                child: CartSummaryButtonWidget(
+                  type: CartButtonType.large,
+                  itemCount: cartProvider.totalItems,
+                  totalPrice: cartProvider.itemTotal,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CartView()),
+                    );
+                  },
+                ),
+              )
+              : null,
+    );
+  }
 }

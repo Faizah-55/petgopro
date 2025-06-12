@@ -3,20 +3,12 @@ import 'package:petgo_clone/models/order_item_model.dart';
 import 'package:petgo_clone/models/order_model.dart';
 import 'package:petgo_clone/provider/cart_provider.dart';
 import 'package:petgo_clone/services/order_service.dart';
-import 'package:petgo_clone/theme/app_theme.dart';
-import 'package:petgo_clone/views/user%20views/orders_view.dart';
+import 'package:petgo_clone/views/user%20views/order_success_view.dart';
 import 'package:petgo_clone/widgets/custom_appbarr.dart';
-import 'package:petgo_clone/widgets/custom_bottom_section%20.dart';
-import 'package:petgo_clone/widgets/custom_buttom.dart';
-import 'package:petgo_clone/widgets/custom_textfelid_widget.dart';
 import 'package:petgo_clone/widgets/square_icon_button.dart';
 import 'package:provider/provider.dart';
 import 'package:moyasar/moyasar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-
-// صفحة دفع ميسر
-
 
 class MoyasarPaymentView extends StatefulWidget {
   final double amount;
@@ -41,55 +33,8 @@ class _MoyasarPaymentViewState extends State<MoyasarPaymentView> {
     orderService = OrderService(widget.supabase);
   }
 
-  void showPaymentSuccessSheet(BuildContext ctx) {
-    showModalBottomSheet(
-      context: ctx,
-      isDismissible: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'تم استلام طلبك بنجاح',
-                style: AppTheme.font24Bold.copyWith(
-                  color: AppTheme.primaryColor,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'نجهز طلبك الآن، وتقدر تتابع حالته من صفحة الطلبات',
-                style: AppTheme.font16Medium.copyWith(
-                  color: AppTheme.primaryColor,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 25),
-              CustomButton(
-                title: 'اذهب لصفحة الطلبات',
-                pressed: () {
-                  Navigator.pop(ctx);
-                  Navigator.push(
-                    ctx,
-                    MaterialPageRoute(builder: (context) => OrdersView()),
-                  );
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   void onPaymentResult(result) async {
-  if (result is PaymentResponse) {
-    if (result.status == PaymentStatus.paid) {
+    if (result is PaymentResponse && result.status == PaymentStatus.paid) {
       final cartProvider = Provider.of<CartProvider>(context, listen: false);
       final userId = widget.supabase.auth.currentUser?.id ?? '';
 
@@ -100,18 +45,41 @@ class _MoyasarPaymentViewState extends State<MoyasarPaymentView> {
         return;
       }
 
+      // استرجاع الموقع من جدول users
+      final locationResponse = await widget.supabase
+          .from('users')
+          .select('latitude, longitude')
+          .eq('user_id', userId)
+          .single();
+
+      final double latitude = (locationResponse['latitude'] as num).toDouble();
+      final double longitude = (locationResponse['longitude'] as num).toDouble();
+
+      final storeName = cartProvider.storeName;
+      final storeUrl = cartProvider.storeUrl;
+      final deliveryFee = cartProvider.deliveryPrice;
+
+      // إنشاء الطلب
       final newOrder = OrderModel(
         orderId: '',
         userId: userId,
-        status: 'pending',
+        status: 'بانتظار المندوب',
         totalPrice: widget.amount,
+        deliveryFee: cartProvider.deliveryPrice,
         createdAt: DateTime.now(),
+        storeName: storeName,
+        storeUrl: storeUrl,
+        latitude: latitude,
+        longitude: longitude,
       );
 
+      // إعداد عناصر الطلب
       final orderItems = cartProvider.items.map((cartItem) {
         return OrderItemModel(
+          id: null,
           orderId: '',
           productId: cartItem.productId,
+          productName: cartItem.name, // ✅ اسم المنتج
           quantity: cartItem.quantity,
           selectedWeight: cartItem.selectedWeight,
           price: cartItem.price,
@@ -122,19 +90,17 @@ class _MoyasarPaymentViewState extends State<MoyasarPaymentView> {
       try {
         await orderService.addOrder(newOrder, orderItems);
         cartProvider.clear();
-        showPaymentSuccessSheet(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const OrderSuccessView()),
+        );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('حدث خطأ أثناء حفظ الطلب: $e')),
         );
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('فشل الدفع: ${result.status.name}')),
-      );
     }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -146,19 +112,16 @@ class _MoyasarPaymentViewState extends State<MoyasarPaymentView> {
       description: 'تم الدفع',
     );
 
-    
-
-return Scaffold(
+    return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar : CustomAppBar(       
-          showShadow: true,
-           rightButton: SquareIconButton(
+      appBar: CustomAppBar(
+        rightButton: SquareIconButton(
           icon: Icons.close,
           onPressed: () {
-              Navigator.pop(context);
-            }
-           ),
-           ),
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 100.0, horizontal: 20),
         child: CreditCard(
@@ -169,4 +132,3 @@ return Scaffold(
     );
   }
 }
-

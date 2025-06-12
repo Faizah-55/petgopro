@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:petgo_clone/provider/cart_provider.dart';
 import 'package:petgo_clone/theme/app_theme.dart';
-import 'package:petgo_clone/views/auth%20views/login_success_view.dart';
 import 'package:petgo_clone/views/splash_view.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:provider/provider.dart';

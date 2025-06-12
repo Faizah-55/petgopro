@@ -2,30 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:petgo_clone/theme/app_theme.dart';
 import 'package:petgo_clone/views/user%20views/home_view.dart';
-import 'package:petgo_clone/views/user%20views/cart_view.dart';
+import 'package:petgo_clone/views/user%20views/orders_view.dart';
 import 'package:petgo_clone/views/user%20views/profile_view.dart';
 
 class BottomNavUser extends StatefulWidget {
-  const BottomNavUser({super.key});
+  final int initialIndex;
+
+  const BottomNavUser({super.key, this.initialIndex = 1}); // 1 = Home tab
 
   @override
   State<BottomNavUser> createState() => _BottomNavUserState();
 }
 
 class _BottomNavUserState extends State<BottomNavUser> {
-  int index = 1;
+  late int index;
 
-  final List<Widget> views = [
-    const ProfileView(),
-    const HomeView(),
-    const CartView(),
+  final List<Widget> views = const [
+    ProfileView(),
+    HomeView(),
+    OrdersView(),
   ];
 
   final List<String> icons = [
     'assets/icons/profile.svg',
     'assets/icons/home.svg',
-    'assets/icons/cart.svg',
+    'assets/icons/orders.svg',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    index = widget.initialIndex;
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -9,10 +9,10 @@ class QuantityControlWidget extends StatefulWidget {
   final Function(int) onCountChanged;
 
   const QuantityControlWidget({
-    Key? key,
+    super.key,
     this.initialCount = 0,
     required this.onCountChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<QuantityControlWidget> createState() => _QuantityControlWidgetState();
