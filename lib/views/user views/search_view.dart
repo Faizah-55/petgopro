@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:petgo_clone/models/store_model.dart';
+import 'package:petgo_clone/provider/favorit_provider.dart';
 import 'package:petgo_clone/theme/app_theme.dart';
 import 'package:petgo_clone/widgets/Square_icon_button.dart';
 import 'package:petgo_clone/widgets/custom_search_bar.dart';
 import 'package:petgo_clone/widgets/store_card_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SearchView extends StatefulWidget {
@@ -16,30 +19,48 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   final TextEditingController _controller = TextEditingController();
-  List<dynamic> results = [];
+  List<Store> storeResults = [];
 
-  /// ✅ دالة البحث تتحدث مع كل تغيير في الحقل
+  @override
+  void initState() {
+    super.initState();
+    if (widget.searchType == 'store') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<FavoriteProvider>().fetchFavorites();
+      });
+    }
+  }
+
   void performSearch(String query) async {
     if (query.trim().isEmpty) {
       setState(() {
-        results = [];
+        storeResults = [];
       });
       return;
     }
 
-    final table = widget.searchType == 'product' ? 'products' : 'stores';
-    final response = await Supabase.instance.client
-        .from(table)
-        .select()
-        .ilike('name', '%$query%');
+    if (widget.searchType == 'store') {
+      final response = await Supabase.instance.client
+          .from('stores')
+          .select()
+          .ilike('name', '%$query%');
 
-    setState(() {
-      results = response;
-    });
+      final stores = (response as List)
+          .map((json) => Store.fromJson(json))
+          .toList();
+
+      setState(() {
+        storeResults = stores;
+      });
+    }
+
+    // لاحقاً: تفعيل البحث في المنتجات
   }
 
   @override
   Widget build(BuildContext context) {
+    final favoriteProvider = context.watch<FavoriteProvider>();
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -72,7 +93,7 @@ class _SearchViewState extends State<SearchView> {
 
             /// ✅ عرض النتائج
             Expanded(
-              child: results.isEmpty
+              child: storeResults.isEmpty
                   ? Center(
                       child: Text(
                         'لا توجد نتائج',
@@ -83,30 +104,26 @@ class _SearchViewState extends State<SearchView> {
                     )
                   : ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: results.length,
+                      itemCount: storeResults.length,
                       itemBuilder: (context, index) {
-                        final item = results[index];
+                        final store = storeResults[index];
+                        final isLiked =
+                            favoriteProvider.isFavorite(store.id);
 
-                        if (widget.searchType == 'store') {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: StoreCardWidget(
-                              storeName: item['name'],
-                              description: item['description'],
-                              logoUrl: item['logo_url'],
-                              rating: (item['rating'] ?? 0).toDouble(),
-                              distanceKm:
-                                  (item['distance_km'] ?? 0).toDouble(),
-                              deliveryPrice:
-                                  (item['delivery_price'] ?? 0).toDouble(),
-                              isLiked: false,
-                              onLikePressed: () {},
-                            ),
-                          );
-                        }
-
-                        // ✅ لاحقًا: لو كان النوع 'product'، اعرض ويدجت المنتج هنا
-                        return const SizedBox(); // مؤقتًا
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: StoreCardWidget(
+                            storeName: store.name,
+                            description: store.description,
+                            logoUrl: store.logoUrl,
+                            rating: store.rating,
+                            distanceKm: store.distanceKm,
+                            deliveryPrice: store.deliveryPrice,
+                            isLiked: isLiked,
+                            onLikePressed: () =>
+                                favoriteProvider.toggleFavorite(store.id),
+                          ),
+                        );
                       },
                     ),
             ),
