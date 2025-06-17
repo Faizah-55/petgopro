@@ -17,6 +17,7 @@ class CustomTextfeildWidget extends StatelessWidget {
     this.isPasswordVisible,
     this.toggleVisibility,
     this.inputFormatters,
+    this.enabled = true, // ✅ مضاف حديثًا
   });
 
   final String title;
@@ -31,6 +32,7 @@ class CustomTextfeildWidget extends StatelessWidget {
   final bool? isPasswordVisible;
   final VoidCallback? toggleVisibility;
   final List<TextInputFormatter>? inputFormatters;
+  final bool enabled; // ✅
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class CustomTextfeildWidget extends StatelessWidget {
         const SizedBox(height: 8),
         TextField(
           controller: controller,
+          enabled: enabled, // ✅ مهم هنا
           textAlign: textAlign,
           textDirection: TextDirection.rtl,
           obscureText: secureText,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:petgo_clone/models/store_model.dart';
+import 'package:petgo_clone/provider/favorit_provider.dart';
 import 'package:petgo_clone/services/get_all_stores.dart';
 import 'package:petgo_clone/theme/app_theme.dart';
 import 'package:petgo_clone/views/user%20views/address_view.dart';
@@ -9,6 +10,7 @@ import 'package:petgo_clone/widgets/custom_appbarr.dart';
 import 'package:petgo_clone/widgets/custom_filter_bar_widget.dart';
 import 'package:petgo_clone/widgets/custom_search_bar.dart';
 import 'package:petgo_clone/widgets/store_card_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeView extends StatefulWidget {
@@ -31,8 +33,20 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    readAllStores();
-    fetchUserLocationName();
+    fetchInitialData();
+
+    // ✅ نجيب الفيفوريت من البروفايدر
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<FavoriteProvider>().fetchFavorites();
+    });
+  }
+
+  Future<void> fetchInitialData() async {
+    await readAllStores();
+    await fetchUserLocationName();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future<void> fetchUserLocationName() async {
@@ -55,7 +69,6 @@ class _HomeViewState extends State<HomeView> {
     setState(() {
       allStores = response;
       filteredStores = response;
-      isLoading = false;
     });
   }
 
@@ -103,6 +116,8 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final favoriteProvider = context.watch<FavoriteProvider>();
+
     return SafeArea(
       child: Column(
         children: [
@@ -175,35 +190,36 @@ class _HomeViewState extends State<HomeView> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: filteredStores.length,
                         itemBuilder: (context, index) {
-                        final store = filteredStores[index];
+                          final store = filteredStores[index];
+                          final isLiked =
+                              favoriteProvider.isFavorite(store.id);
 
-                        return Padding(
+                          return Padding(
                             padding: const EdgeInsets.only(bottom: 12),
-                              child: GestureDetector(
-                                onTap: () {
-                                 Navigator.push(
-                                 context,
-                                 MaterialPageRoute(
-                                 builder: (_) => StoreView(store : store),
-                          ),
-                         );
-        
-                       },
-   
-                   child: StoreCardWidget(
-                      storeName: store.name,
-                      description: store.description,
-                      logoUrl: store.logoUrl,
-                      rating: store.rating,
-                      distanceKm: store.distanceKm,
-                      deliveryPrice: store.deliveryPrice,
-                      isLiked: false,
-                     onLikePressed: () {},
-                 ),
-                ),
-              );
-             },
-            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => StoreView(store: store),
+                                  ),
+                                );
+                              },
+                              child: StoreCardWidget(
+                                storeName: store.name,
+                                description: store.description,
+                                logoUrl: store.logoUrl,
+                                rating: store.rating,
+                                distanceKm: store.distanceKm,
+                                deliveryPrice: store.deliveryPrice,
+                                isLiked: isLiked,
+                                onLikePressed: () => favoriteProvider
+                                    .toggleFavorite(store.id),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
           ),
         ],
       ),

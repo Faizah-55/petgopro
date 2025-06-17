@@ -12,7 +12,7 @@ import 'package:petgo_clone/theme/app_theme.dart';
 /// - اسم الموقع في اليسار مع أيقونة الموقع وسهم
 ///
 /// مرن وقابل لإعادة الاستخدام في جميع صفحات التطبيق.
-
+///جججووورريييي
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;              // ✅ عنوان الصفحة في المنتصف
   final Widget? rightButton;       // ✅ أيقونة على أقصى يمين 
@@ -20,7 +20,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? leftButton;        // ✅ زر في اليسار 
   final String? locationName;      // ✅ اسم الموقع الظاهر في الزاوية اليسرى
   final VoidCallback? onLocationTap; // ✅ ينفذ عند الضغط على اسم الموقع
-  final bool showShadow;           // ✅ يتحكم بإظهار الظل أسفل الـ AppBar
+  final bool showShadow;
+  final Widget? titleWidget; // ✅ ويدجت مخصص للعنوان (مثل نص + أيقونة)
+           // ✅ يتحكم بإظهار الظل أسفل الـ AppBar
 
   const CustomAppBar({
     super.key,
@@ -31,6 +33,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.locationName,
     this.onLocationTap,
     this.showShadow = false,
+    this.titleWidget,
+    
   });
 
   @override
@@ -74,16 +78,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
               // ✅ القسم الأوسط: عنوان مركزي إذا موجود
               Expanded(
-                child: Center(
-                  child: title != null
-                      ? Text(
-                          title!,
-                          style: AppTheme.font20SemiBold,
-                          textAlign: TextAlign.center,
-                        )
-                      : const SizedBox.shrink(),
-                ),
-              ),
+  child: Center(
+    child: titleWidget != null
+        ? titleWidget! // ✅ إذا تم تمرير ويدجت مخصص
+        : title != null
+            ? Text(
+                title!,
+                style: AppTheme.font20SemiBold,
+                textAlign: TextAlign.center,
+              )
+            : const SizedBox.shrink(),
+  ),
+),
+
 
               // ✅ القسم الأيسر: زر + موقع
               Row(
