@@ -1,11 +1,10 @@
+
 import 'package:flutter/material.dart';
-import 'package:petgo_clone/models/store_model.dart';
-import 'package:petgo_clone/provider/favorit_provider.dart';
 import 'package:petgo_clone/theme/app_theme.dart';
 import 'package:petgo_clone/widgets/Square_icon_button.dart';
 import 'package:petgo_clone/widgets/custom_search_bar.dart';
+import 'package:petgo_clone/widgets/product_card_widget.dart';
 import 'package:petgo_clone/widgets/store_card_widget.dart';
-import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SearchView extends StatefulWidget {
@@ -19,48 +18,49 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   final TextEditingController _controller = TextEditingController();
-  List<Store> storeResults = [];
+  List<dynamic> results = [];
 
-  @override
-  void initState() {
-    super.initState();
-    if (widget.searchType == 'store') {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<FavoriteProvider>().fetchFavorites();
-      });
-    }
-  }
-
+  /// ✅ دالة البحث تتحدث مع كل تغيير في الحقل
   void performSearch(String query) async {
     if (query.trim().isEmpty) {
       setState(() {
-        storeResults = [];
+        results = [];
       });
       return;
     }
 
-    if (widget.searchType == 'store') {
-      final response = await Supabase.instance.client
-          .from('stores')
-          .select()
-          .ilike('name', '%$query%');
+    // final table = widget.searchType == 'product' ? 'products' : 'stores';
+    // final response = await Supabase.instance.client
+    //     .from(table)
+    //     .select()
+    //     .ilike('name', '%$query%');
 
-      final stores = (response as List)
-          .map((json) => Store.fromJson(json))
-          .toList();
+    // setState(() {
+    //   results = response;
+    // });
 
-      setState(() {
-        storeResults = stores;
-      });
-    }
+    if (widget.searchType == 'product') {
+  final response = await Supabase.instance.client
+      .from('products')
+      .select('product_id, name, image_url, short_description, price, store_id, stores(name, logo_url)')
+      .ilike('name', '%$query%');
+  setState(() {
+    results = response;
+  });
+} else {
+  final response = await Supabase.instance.client
+      .from('stores')
+      .select()
+      .ilike('name', '%$query%');
+  setState(() {
+    results = response;
+  });
+}
 
-    // لاحقاً: تفعيل البحث في المنتجات
   }
 
   @override
   Widget build(BuildContext context) {
-    final favoriteProvider = context.watch<FavoriteProvider>();
-
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -93,7 +93,7 @@ class _SearchViewState extends State<SearchView> {
 
             /// ✅ عرض النتائج
             Expanded(
-              child: storeResults.isEmpty
+              child: results.isEmpty
                   ? Center(
                       child: Text(
                         'لا توجد نتائج',
@@ -104,26 +104,48 @@ class _SearchViewState extends State<SearchView> {
                     )
                   : ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: storeResults.length,
+                      itemCount: results.length,
                       itemBuilder: (context, index) {
-                        final store = storeResults[index];
-                        final isLiked =
-                            favoriteProvider.isFavorite(store.id);
+                        final item = results[index];
 
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: StoreCardWidget(
-                            storeName: store.name,
-                            description: store.description,
-                            logoUrl: store.logoUrl,
-                            rating: store.rating,
-                            distanceKm: store.distanceKm,
-                            deliveryPrice: store.deliveryPrice,
-                            isLiked: isLiked,
-                            onLikePressed: () =>
-                                favoriteProvider.toggleFavorite(store.id),
-                          ),
-                        );
+                        if (widget.searchType == 'store') {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: StoreCardWidget(
+                              storeName: item['name'],
+                              description: item['description'],
+                              logoUrl: item['logo_url'],
+                              rating: (item['rating'] ?? 0).toDouble(),
+                              distanceKm:
+                                  (item['distance_km'] ?? 0).toDouble(),
+                              deliveryPrice:
+                                  (item['delivery_price'] ?? 0).toDouble(),
+                              isLiked: false,
+                              onLikePressed: () {},
+                            ),
+                          );
+                        }
+                        else if (widget.searchType == 'product') {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: ProductCardWidget(
+        productId: item ['product_id'],
+        name: item['name'],
+        shortDescription: item['short_description'] ?? '',
+        imageUrl: item['image_url'] ?? '',
+        price: (item['price'] ?? 0).toDouble(),
+        storeId: item ['store_id'],
+        storeName: item ['store_name'] ?? '',
+        storeUrl: item ['store_url'] ?? '',
+        onTap: (){},
+        onQuantityChanged: (newQuantity) {
+        },
+      ),
+    );
+  } else {
+    return const SizedBox(); // احتياط لو نوع البحث غلط
+  }
+
                       },
                     ),
             ),

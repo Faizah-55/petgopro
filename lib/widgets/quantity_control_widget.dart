@@ -112,12 +112,16 @@ void didUpdateWidget(covariant QuantityControlWidget oldWidget) {
                   ),
                 ),
 
-                Text(
-                  '$count',
-                  style: TextStyle(
-                    color: AppTheme.whiteColor,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 10,
+                Flexible(
+                  child: Text(
+                    '$count',
+                    style: TextStyle(
+                      color: AppTheme.whiteColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 10,
+                    ),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis ,
                   ),
                 ),
 

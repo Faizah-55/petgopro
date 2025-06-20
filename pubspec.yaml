@@ -33,6 +33,7 @@ dependencies:
   moyasar: ^2.0.16
   timeline_tile: ^2.0.0
   timelines_plus: ^1.0.7
+  font_awesome_flutter: ^10.7.0
 
 
 

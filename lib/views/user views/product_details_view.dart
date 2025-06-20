@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:petgo_clone/models/cart_item_model.dart';
 import 'package:petgo_clone/models/product_model.dart';
@@ -29,11 +30,11 @@ class ProductDetailsView extends StatefulWidget {
 class _ProductDetailsViewState extends State<ProductDetailsView> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-  int _selectedWeightIndex = 0;
+  // int _selectedWeightIndex = 0;
   int _quantity = 1;
 
-  final List<String> weights = ['400غ', '2 كغم', '4 كغم', '10 كغم'];
-  final List<double> weightMultipliers = [1.0, 3.0, 6.0, 12.0];
+  // final List<String> weights = ['400غ', '2 كغم', '4 كغم', '10 كغم'];
+  // final List<double> weightMultipliers = [1.0, 3.0, 6.0, 12.0];
 
   List<String> get productImages {
     List<String> images = [];
@@ -44,8 +45,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
     return images;
   }
 
-  double get currentPrice =>
-      widget.product.price * weightMultipliers[_selectedWeightIndex];
+  double get currentPrice => widget.product.price ;
 
   void _goToPrevious() {
     if (_currentPage > 0) {
@@ -143,73 +143,7 @@ Widget build(BuildContext context) {
                             color: AppTheme.primaryColor,
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.scale,
-                                    size: 20, color: AppTheme.yellowColor),
-                                const SizedBox(width: 4),
-                                Text(
-                                  'الوزن',
-                                  style: AppTheme.font14Medium.copyWith(
-                                    color: AppTheme.primaryColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Icon(Icons.money,
-                                    size: 20, color: AppTheme.yellowColor),
-                                const SizedBox(width: 4),
-                                Text(
-                                  '${currentPrice.toStringAsFixed(2)} ريال',
-                                  style: AppTheme.font14Medium.copyWith(
-                                    color: AppTheme.primaryColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: List.generate(weights.length, (index) {
-                            final isSelected = _selectedWeightIndex == index;
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _selectedWeightIndex = index;
-                                });
-                              },
-                              child: Container(
-                                width: 58,
-                                height: 50,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? AppTheme.yellowColor
-                                      : AppTheme.whiteColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                  border:
-                                      Border.all(color: AppTheme.borderColor),
-                                ),
-                                child: Text(
-                                  weights[index],
-                                  style: AppTheme.font14Medium.copyWith(
-                                    color: isSelected
-                                        ? AppTheme.whiteColor
-                                        : AppTheme.primaryColor,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
+                   
                         const SizedBox(height: 20),
                       ],
                     ),
@@ -288,7 +222,7 @@ Widget build(BuildContext context) {
                             name: widget.product.name,
                             price: currentPrice,
                             quantity: _quantity,
-                            selectedWeight: weights[_selectedWeightIndex],
+                            selectedWeight: '',
                             imageUrl: widget.product.imageUrl ?? '',
                           );
 

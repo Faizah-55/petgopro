@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:petgo_clone/theme/app_theme.dart';
 
@@ -24,20 +25,19 @@ class AnimalTabWidget extends StatelessWidget {
         width: 100,
         height: 36,
         alignment: Alignment.center,
-        margin: const EdgeInsets.only(right: 10), 
+        margin: const EdgeInsets.only(left : 5), 
         decoration: BoxDecoration(
           color: isSelected
-              ? AppTheme.greenLocationColor 
-              : AppTheme.whiteColor, 
+                ? AppTheme.primaryColor
+                : AppTheme.whiteColor, 
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(4),   
-                  topRight: Radius.circular(5),   
+                  topLeft: Radius.circular(6),   
+                  topRight: Radius.circular(6),   
                   bottomLeft: Radius.circular(0),  
                   bottomRight: Radius.circular(0), 
-    ),          border: Border.all(
-            color: isSelected
-                ? AppTheme.primaryColor
-                : AppTheme.borderColor, 
+    ),        
+      border: Border.all(
+            color: AppTheme.borderColor, 
           ),
         ),
         child: Text(
