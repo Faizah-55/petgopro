@@ -55,7 +55,7 @@
 
 ### Figma Screens
 
-- [View UI Design on Figma]([https://www.figma.com/your-link-here](https://www.figma.com/design/sNkKjCq3GOsWpoiRi89WXe/Untitled?node-id=0-1&t=TiWePJkOvcT9FLES-1))
+- [View UI Design on Figma](https://www.figma.com/your-link-here](https://www.figma.com/design/sNkKjCq3GOsWpoiRi89WXe/Untitled?node-id=0-1&t=TiWePJkOvcT9FLES-1))
 
 ### Supabase Schema
 
