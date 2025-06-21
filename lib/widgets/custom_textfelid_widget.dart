@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:petgo_clone/theme/app_theme.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextfeildWidget extends StatelessWidget {
   const CustomTextfeildWidget({
@@ -14,6 +16,8 @@ class CustomTextfeildWidget extends StatelessWidget {
     this.suffixWidget,
     this.isPasswordVisible,
     this.toggleVisibility,
+    this.inputFormatters,
+    this.enabled = true, // ✅ مضاف حديثًا
   });
 
   final String title;
@@ -27,6 +31,8 @@ class CustomTextfeildWidget extends StatelessWidget {
   final Widget? suffixWidget;
   final bool? isPasswordVisible;
   final VoidCallback? toggleVisibility;
+  final List<TextInputFormatter>? inputFormatters;
+  final bool enabled; // ✅
 
   @override
   Widget build(BuildContext context) {
@@ -36,47 +42,51 @@ class CustomTextfeildWidget extends StatelessWidget {
         Text(
           title,
           textDirection: TextDirection.rtl,
-          style: const TextStyle(
+          style: AppTheme.font14Regular.copyWith(
             fontWeight: FontWeight.bold,
-            fontSize: 14,
-            color: Color(0xFF0A4543),
+            color: AppTheme.primaryColor,
           ),
         ),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
+          enabled: enabled, // ✅ مهم هنا
           textAlign: textAlign,
           textDirection: TextDirection.rtl,
           obscureText: secureText,
           keyboardType: keyboardType,
+          inputFormatters : inputFormatters,
+          style: AppTheme.font14Regular.copyWith(
+            fontWeight: FontWeight.w400,
+            color: AppTheme.primaryColor,
+          ),
           decoration: InputDecoration(
             hintText: hintText ?? '',
-            hintStyle: TextStyle(color: Colors.grey[500], fontSize: 14),
-            suffixIcon:
-                isPassword
-                    ? IconButton(
-                      icon: Icon(
-                        isPasswordVisible == true
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: Colors.amber,
-                      ),
-                      onPressed: toggleVisibility,
-                    )
-                    : prefixWidget,
+            hintStyle: AppTheme.font14LightHint,
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      isPasswordVisible == true
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: AppTheme.yellowColor,
+                    ),
+                    onPressed: toggleVisibility,
+                  )
+                : prefixWidget,
             filled: true,
-            fillColor: Colors.white,
+            fillColor: AppTheme.whiteColor,
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
+              horizontal: 14,
+              vertical: 10,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: AppTheme.borderColor),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade400),
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: AppTheme.borderColor.withOpacity(0.9)),
             ),
           ),
         ),

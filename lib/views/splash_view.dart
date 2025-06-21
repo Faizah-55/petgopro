@@ -1,61 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:petgo_clone/theme/app_theme.dart';
 import 'onboarding_view.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashScreenState extends State<SplashView> {
+class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
-
     Future.delayed(const Duration(seconds: 5), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => OnboardingView()),
+        MaterialPageRoute(builder: (_) => const OnboardingView()),
       );
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F9F8),
+      backgroundColor: AppTheme.backgroundColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // ✅ لوجو التطبيق
             SizedBox(
               width: screenWidth * 0.5,
-              child: Image.asset('assets/logo_petgo.png', fit: BoxFit.contain),
+              child: Image.asset('assets/logo/logo_petgo.png', fit: BoxFit.contain),
             ),
-            SizedBox(height: 26, width: 243),
 
+            const SizedBox(height: 26),
+
+            // ✅ النص الأوسط
             Text(
               '!مستلزماتهم توصلكم لحد الباب',
-              style: GoogleFonts.changa(
-                fontWeight: FontWeight.w500,
-                fontSize: 18,
-                color: const Color(0xFF0A4543),
-                height: 1.44, // line-height: 26px / font-size: 18px
-              ),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    height: 26 / 18,
+                    color: AppTheme.primaryColor,
+                  ),
             ),
-            SizedBox(height: screenHeight * 0.03),
 
+            const SizedBox(height: 24),
+
+            // ✅ المؤشر الدائري
             CircularProgressIndicator(
-              color: const Color(0xFF0A4543), // لون المؤشر
-              strokeWidth: screenWidth * 0.015, // 1.5% من العرض
+              color: AppTheme.primaryColor,
+              strokeWidth: screenWidth * 0.015,
             ),
 
-            SizedBox(height: screenHeight * 0.2), // مسافة 20% من ارتفاع الشاشة
+            const SizedBox(height: 48), // مسافة نهائية بسيطة
           ],
         ),
       ),

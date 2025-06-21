@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:petgo_clone/theme/app_theme.dart';
 
 class CustomAuthWidget extends StatelessWidget {
   final String question;
@@ -20,17 +21,15 @@ class CustomAuthWidget extends StatelessWidget {
         textDirection: TextDirection.rtl,
         textAlign: TextAlign.center,
         text: TextSpan(
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF0A4543),
+          style: AppTheme.font14Medium.copyWith(
+            color: AppTheme.primaryColor,
           ),
           children: [
             TextSpan(text: '$question '),
             TextSpan(
               text: title,
-              style: const TextStyle(
-                color: Colors.amber,
+              style: AppTheme.font14Medium.copyWith(
+                color: AppTheme.yellowColor,
                 decoration: TextDecoration.underline,
               ),
               recognizer: TapGestureRecognizer()..onTap = pressed,
