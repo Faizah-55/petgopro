@@ -70,13 +70,13 @@ I am a student at Umm Al-Qura University, Department of Software Engineering, sp
 I've worked on designing interfaces for various applications and websites, such as product delivery sites, service display sites, educational applications, and online stores. I also designed and implemented user research, worked on user experience design, and worked on designing interfaces from prototypes to final design. My skills and experience grow with every project I work on, regardless of my role.
 
 ### Role
-• Leading & managing the team
-• Front-end developer
+- Leading & managing the team
+- Front-end developer
 
 ### Contact
-• Email: Jorymacros4@gmail.com  
-• LinkedIn: [www.linkedin.com/in/juori-mahrous](https://www.linkedin.com/in/juori-mahrous-666b96273)  
-• GitHub: [https://github.com/JuriMahrous](https://github.com/JuriMahrous)
+- Email: Jorymacros4@gmail.com
+- LinkedIn: [www.linkedin.com/in/juori-mahrous](https://www.linkedin.com/in/juori-mahrous-666b96273)
+- GitHub: [https://github.com/JuriMahrous](https://github.com/JuriMahrous)
 
 
 ---
@@ -87,12 +87,12 @@ Third-year Computer Science student at Umm Al-Qura University. Worked as a fulls
 
 
 ### Role  
-• Fullstack mobile developer
+- Fullstack mobile developer
 
 ### Contact
-• Email: rozabdullah72@gmail.com  
-• LinkedIn: [www.linkedin.com/in/roz-abdullah](https://www.linkedin.com/in/roz-abdullah)  
-• GitHub: [https://github.com/rabakkar](https://github.com/rabakkar)
+- Email: rozabdullah72@gmail.com
+- LinkedIn: [www.linkedin.com/in/roz-abdullah](https://www.linkedin.com/in/roz-abdullah)
+- GitHub: [https://github.com/rabakkar](https://github.com/rabakkar)
 
 ---
 
@@ -102,11 +102,11 @@ Third-year HCI student at Umm Al-Qura University, passionate about creating clea
 I’ve worked on projects like travel booking apps and website redesigns, and I’m always eager to grow my skills and solve real user problems through design.
 
 ### Role
-• UI / UX Designer
+- UI / UX Designer
 
 ### Contact 
-• Email: sadeen.al.qurashi@hotmail.com  
-• LinkedIn: [linkedin.com/in/sadeen-al-qurashi-2a8048362](https://linkedin.com/in/sadeen-al-qurashi-2a8048362)
+- Email: sadeen.al.qurashi@hotmail.com
+- LinkedIn: [linkedin.com/in/sadeen-al-qurashi-2a8048362](https://linkedin.com/in/sadeen-al-qurashi-2a8048362)
 
 ---
 
@@ -115,11 +115,11 @@ I’ve worked on projects like travel booking apps and website redesigns, and I�
 I am Shumukh Alsulami, a Computer Science student at Umm Al-Qura University, currently approaching graduation. I have a great passion for learning programming and exploring different programming languages. I believe that each language has its own unique purpose and style that makes it special. I always seek to develop myself and gain new experiences in this field. Working on this project with the team was a beneficial experience that added a lot to me.
 
 ### Role  
-• Fullstack Developer
+- Fullstack Developer
 
 ### Contact 
-• Email: shumukh.abdulrahman@gmail.com  
-• GitHub: [https://github.com/shumukh-ar](https://github.com/shumukh-ar)
+- Email: shumukh.abdulrahman@gmail.com
+- GitHub: [https://github.com/shumukh-ar](https://github.com/shumukh-ar)
 
 ---
 
@@ -131,11 +131,11 @@ I have worked on several academic and personal projects using Flutter, Firebase,
 I also completed a 6-month training on real-world projects, which helped me enhance my technical skills and gain practical experience in software development.
 
 ### Role
-• Fullstack Developer
+- Fullstack Developer
 
 ### Contact
-• Email: faizahalyasi@gmail.com  
-• LinkedIn: [http://linkedin.com/in/faizah-al-yasi-02a3a82a1](http://linkedin.com/in/faizah-al-yasi-02a3a82a1)  
-• GitHub: [https://github.com/Faizah-55](https://github.com/Faizah-55)
+- Email: faizahalyasi@gmail.com
+- LinkedIn: [http://linkedin.com/in/faizah-al-yasi-02a3a82a1](http://linkedin.com/in/faizah-al-yasi-02a3a82a1)
+- GitHub: [https://github.com/Faizah-55](https://github.com/Faizah-55)
 
 
