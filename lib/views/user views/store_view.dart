@@ -1,11 +1,12 @@
+
 import 'package:flutter/material.dart';
 import 'package:petgo_clone/models/animal_type.dart';
 import 'package:petgo_clone/models/product_model.dart';
 import 'package:petgo_clone/models/store_model.dart';
 import 'package:petgo_clone/models/sub_category.dart';
 import 'package:petgo_clone/provider/cart_provider.dart';
-import 'package:petgo_clone/provider/favorit_provider.dart';
 import 'package:petgo_clone/services/get_all_stores.dart';
+import 'package:petgo_clone/theme/app_theme.dart';
 import 'package:petgo_clone/views/user%20views/cart_view.dart';
 import 'package:petgo_clone/views/user%20views/search_view.dart';
 import 'package:petgo_clone/widgets/cart_button_type.dart';
@@ -102,11 +103,7 @@ class _StoreViewState extends State<StoreView> {
 
       // 🟡 هنا نحفظ بيانات المتجر عند أول مرة فقط
       if (cartProvider.storeName == null && cartProvider.storeUrl == null) {
-        cartProvider.setStoreInfo(
-          name: store.name,
-          url: store.logoUrl,
-          id: store.id,
-        );
+        cartProvider.setStoreInfo(name: store.name, url: store.logoUrl, id: store.id);
       }
     }
   }
@@ -162,7 +159,6 @@ class _StoreViewState extends State<StoreView> {
   @override
   Widget build(BuildContext context) {
     final cartProvider = context.watch<CartProvider>();
-    final favoriteProvider = context.watch<FavoriteProvider>();
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -220,46 +216,60 @@ class _StoreViewState extends State<StoreView> {
               rating: widget.store.rating,
               distanceKm: widget.store.distanceKm,
               deliveryPrice: widget.store.deliveryPrice,
-              isLiked: favoriteProvider.isFavorite(widget.store.id),
-              onLikePressed: () {
-                favoriteProvider.toggleFavorite(widget.store.id);
-              },
+              isLiked: false,
+              onLikePressed: () {},
             ),
-            const SizedBox(height: 16),
-            SizedBox(
-              height: 36,
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: animalTypes.length,
-                  itemBuilder: (context, index) {
-                    final animal = animalTypes[index];
-                    return AnimalTabWidget(
-                      title: animal.name,
-                      isSelected: animal.id == selectedAnimalId,
-                      onTap: () {
-                        setState(() {
-                          selectedAnimalId = animal.id;
-                          fetchSubCategories(selectedAnimalId!);
-                        });
-                      },
-                    );
-                  },
-                ),
-              ),
-            ),
+           
+
+Container(   
+  decoration: BoxDecoration(
+    color: AppTheme.whiteColor, // استبدل باللون اللي تبيه
+    borderRadius: const BorderRadius.only(
+      topLeft: Radius.circular(6),
+      topRight: Radius.circular(6),
+    ),
+    border: Border.all(
+          color: AppTheme.borderColor,
+          width: 1.5,
+        ),
+  ),
+  padding: const EdgeInsets.only(top: 10), // ارتفاع الخلفية فوق التابز
+  child: SizedBox(
+    height: 36,
+    child: Directionality(
+      textDirection: TextDirection.rtl,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: animalTypes.length,
+        itemBuilder: (context, index) {
+          final animal = animalTypes[index];
+          return AnimalTabWidget(
+            title: animal.name,
+            isSelected: animal.id == selectedAnimalId,
+            onTap: () {
+              setState(() {
+                selectedAnimalId = animal.id;
+                fetchSubCategories(selectedAnimalId!);
+              });
+            },
+          );
+        },
+      ),
+    ),
+  ),
+),
             Expanded(
               child: SingleChildScrollView(
                 child: SubCategoryWidget(
                   subCategories: subCategories,
                   allProducts: allProducts,
                   storeName: widget.store.name, // ✅ نمرر اسم المتجر
-                  storeUrl: widget.store.logoUrl, // ✅ نمرر رابط صورة المتجر
-                  storeId: storeId, // ✅ نمرر رابط صورة المتجر
+                  storeUrl: widget.store.logoUrl, // ✅ نمرر رابط صورة المتجر                 
+                  storeId: storeId, // ✅ نمرر رابط صورة المتجر                 
                 ),
               ),
             ),
+
           ],
         ),
       ),
@@ -282,3 +292,4 @@ class _StoreViewState extends State<StoreView> {
     );
   }
 }
+

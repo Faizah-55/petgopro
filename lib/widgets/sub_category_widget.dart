@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:petgo_clone/models/product_model.dart';
 import 'package:petgo_clone/models/sub_category.dart';
@@ -32,11 +33,16 @@ class SubCategoryWidget extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(0),   
+                  topRight: Radius.circular(0),   
+                  bottomLeft: Radius.circular(6),  
+                  bottomRight: Radius.circular(6), 
+    ),       
+     
         border: Border.all(
-          color: AppTheme.borderColor,
-          width: 1.5,
-        ),
+            color:  AppTheme.borderColor
+          ),
       ),
       padding: const EdgeInsets.only(top: 14, bottom: 16, left: 7, right: 7),
       child: Column(

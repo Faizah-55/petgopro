@@ -1,4 +1,7 @@
+
+
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:petgo_clone/theme/app_theme.dart';
 import 'package:petgo_clone/widgets/custom_appbarr.dart';
 import 'package:petgo_clone/widgets/square_icon_button.dart';
@@ -44,14 +47,14 @@ class ProfileSupportView extends StatelessWidget {
               _buildContactItem(
                 title: "الرقم",
                 value: "920000987",
-                icon: Icons.call,
+                icon: Icon(Icons.call, color: AppTheme.yellowColor, size: 21),
               ),
               _divider(),
 
               _buildContactItem(
                 title: "البريد الإلكتروني",
                 value: "PetGoCare@gmail.com",
-                icon: Icons.email_outlined,
+                icon: Icon(Icons.email_outlined, color: AppTheme.yellowColor, size: 21),
               ),
 
               const SizedBox(height: 30),
@@ -68,14 +71,14 @@ class ProfileSupportView extends StatelessWidget {
               _buildContactItem(
                 title: "تويتر",
                 value: "@PetG01",
-                icon: Icons.numbers, // تقدر تغيرها لأيقونة تويتر SVG إذا حبيت
+                icon: FaIcon(FontAwesomeIcons.twitter, color: AppTheme.yellowColor, size: 21),
               ),
               _divider(),
 
               _buildContactItem(
                 title: "إنستقرام",
                 value: "@PetG01",
-                icon: Icons.camera_alt_outlined,
+                icon: FaIcon(FontAwesomeIcons.instagram, color: AppTheme.yellowColor, size: 21),
               ),
             ],
           ),
@@ -84,10 +87,11 @@ class ProfileSupportView extends StatelessWidget {
     );
   }
 
+  /// تعديل: صار يقبل أي Widget بدلاً من IconData
   Widget _buildContactItem({
     required String title,
     required String value,
-    required IconData icon,
+    required Widget icon,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0),
@@ -113,11 +117,7 @@ class ProfileSupportView extends StatelessWidget {
               ],
             ),
           ),
-          Icon(
-            icon,
-            color: AppTheme.yellowColor,
-            size: 21,
-          ), // الأيقونة في اليسار
+          icon, // الأيقونة في اليسار (صار يقبل أي Widget)
         ],
       ),
     );

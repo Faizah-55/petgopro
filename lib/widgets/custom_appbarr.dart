@@ -12,7 +12,6 @@ import 'package:petgo_clone/theme/app_theme.dart';
 /// - اسم الموقع في اليسار مع أيقونة الموقع وسهم
 ///
 /// مرن وقابل لإعادة الاستخدام في جميع صفحات التطبيق.
-///جججووورريييي
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;              // ✅ عنوان الصفحة في المنتصف
   final Widget? rightButton;       // ✅ أيقونة على أقصى يمين 
