@@ -29,7 +29,7 @@
 
 ---
 
-## Tech Stack
+## Tools Used
 
 - Frontend: Flutter  
 - Backend: Dart and Supabase for database & authentication
