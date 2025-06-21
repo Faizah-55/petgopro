@@ -58,6 +58,7 @@
 - [View UI Design on Figma](https://www.figma.com/design/sNkKjCq3GOsWpoiRi89WXe/Untitled?node-id=0-1&t=TiWePJkOvcT9FLES-1)
 
 ### Supabase Schema
+![supabase-schema-remppmohbnwuotdwggiv (2)](https://github.com/user-attachments/assets/ec6141fb-c50a-4cee-90e9-529c24021b42)
 
 ---
 
