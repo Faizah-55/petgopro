@@ -87,7 +87,7 @@ Third-year Computer Science student at Umm Al-Qura University. Worked as a fulls
 
 
 ### Role  
-- Fullstack mobile developer
+- Fullstack developer
 
 ### Contact
 - Email: rozabdullah72@gmail.com
