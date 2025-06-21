@@ -25,14 +25,14 @@
 ## App Walkthrough
 
 - User Flow: [Watch Demo](https://your-video-link.com/user-demo)  
-- Admin Panel: [Watch Demo](https://your-video-link.com/admin-demo)
+- Admin Flow: [Watch Demo](https://your-video-link.com/admin-demo)
 
 ---
 
 ## Tech Stack
 
 - Frontend: Flutter  
-- Backend: Dart + Supabase (Database & Authentication)  
+- Backend: Dart and Supabase for database & authentication
 - State Management: Provider  
 - Payments: Moyasar API  
 - Design: Figma  
@@ -60,16 +60,63 @@
 
 ### Supabase Schema
 
-
-
 ---
 
 ## Team Members
 
-- [Your Name 1] – Flutter Development  
-- [Your Name 2] – Supabase & Backend  
-- [Your Name 3] – UI/UX Design  
-- [Your Name 4] – Project Management  
+**Roz Abdullah**
+
+Third-year Computer Science student at Umm Al-Qura University. Worked as a fullstack mobile developer in this project and always trying to get better. Enjoy clean code, organized work, and attention to detail. Completed a 4-month training at a tech organization with real tasks and practical experience. Strong leadership skills, active in teams, and love learning, researching, and exploring UI/UX and dashboard design.
+
+
+**Role**  
+• Fullstack mobile developer
+
+**Contact**  
+• Email: rozabdullah72@gmail.com  
+• LinkedIn: [www.linkedin.com/in/roz-abdullah](https://www.linkedin.com/in/roz-abdullah)  
+• GitHub: [https://github.com/rabakkar](https://github.com/rabakkar)
 
 ---
 
+**Sadeen Al-Qurashi**
+
+Third-year HCI student at Umm Al-Qura University, passionate about creating clear, intuitive, and human-centered interfaces. I focus on UI/UX design and enjoy turning ideas into simple, functional visuals.  
+I’ve worked on projects like travel booking apps and website redesigns, and I’m always eager to grow my skills and solve real user problems through design.
+
+**Role**  
+• UI / UX Designer
+
+**Contact**  
+• Email: sadeen.al.qurashi@hotmail.com  
+• LinkedIn: [linkedin.com/in/sadeen-al-qurashi-2a8048362](https://linkedin.com/in/sadeen-al-qurashi-2a8048362)
+
+---
+
+**Shumukh Alsulami**
+
+I am Shumukh Alsulami, a Computer Science student at Umm Al-Qura University, currently approaching graduation. I have a great passion for learning programming and exploring different programming languages. I believe that each language has its own unique purpose and style that makes it special. I always seek to develop myself and gain new experiences in this field. Working on this project with the team was a beneficial experience that added a lot to me.
+
+**Role**  
+• Fullstack Developer
+
+**Contact**  
+• Email: shumukh.abdulrahman@gmail.com  
+• GitHub: [https://github.com/shumukh-ar](https://github.com/shumukh-ar)
+
+---
+
+**Faizah Alyasi**
+
+Recent graduate with a Diploma in Information Technology from King Faisal University, with strong communication skills and a deep interest in technology.  
+Passionate about web and mobile app development, with a growing interest in cloud computing (AWS).  
+I have worked on several academic and personal projects using Flutter, Firebase, and Supabase.  
+I also completed a 6-month training on real-world projects, which helped me enhance my technical skills and gain practical experience in software development.
+
+**Role**  
+• Fullstack Developer
+
+**Contact**  
+• Email: faizahalyasi@gmail.com  
+• LinkedIn: [http://linkedin.com/in/faizah-al-yasi-02a3a82a1](http://linkedin.com/in/faizah-al-yasi-02a3a82a1)  
+• GitHub: [https://github.com/Faizah-55](https://github.com/Faizah-55)
