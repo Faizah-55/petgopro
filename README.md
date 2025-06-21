@@ -24,19 +24,18 @@
 
 ## App Walkthrough
 
-- User Flow: [Watch Demo](https://your-video-link.com/user-demo)  
-- Admin Flow: [Watch Demo](https://your-video-link.com/admin-demo)
+- [Click here](https://drive.google.com/drive/folders/1kKVC3zBDTZKamjTl4uetYnWhfYv06y9u) to watch a full walkthrough of the app, including both the user and admin sides.
 
 ---
 
 ## Tools Used
 
-- Frontend: Flutter  
-- Backend: Dart and Supabase for database & authentication
-- State Management: Provider  
-- Payments: Moyasar API  
-- Design: Figma  
-- Project Management: GitHub  
+- Frontend: `Flutter`  
+- Backend: `Dart` and `Supabase` for database & authentication
+- State Management: `Provider`  
+- Payments: `Moyasar API`  
+- Design: `Figma`  
+- Project Management: `GitHub`  
 
 ---
 
@@ -56,7 +55,7 @@
 
 ### Figma Screens
 
-- [View UI Design on Figma](https://www.figma.com/your-link-here)
+- [View UI Design on Figma]([https://www.figma.com/your-link-here](https://www.figma.com/design/sNkKjCq3GOsWpoiRi89WXe/Untitled?node-id=0-1&t=TiWePJkOvcT9FLES-1))
 
 ### Supabase Schema
 
@@ -74,7 +73,7 @@ I've worked on designing interfaces for various applications and websites, such 
 - Front-end developer
 
 ### Contact
-- Email: Jorymacros4@gmail.com
+- Email: `Jorymacros4@gmail.com`
 - LinkedIn: [www.linkedin.com/in/juori-mahrous](https://www.linkedin.com/in/juori-mahrous-666b96273)
 - GitHub: [https://github.com/JuriMahrous](https://github.com/JuriMahrous)
 
@@ -90,7 +89,7 @@ Third-year Computer Science student at Umm Al-Qura University. Worked as a fulls
 - Fullstack developer
 
 ### Contact
-- Email: rozabdullah72@gmail.com
+- Email: `rozabdullah72@gmail.com`
 - LinkedIn: [www.linkedin.com/in/roz-abdullah](https://www.linkedin.com/in/roz-abdullah)
 - GitHub: [https://github.com/rabakkar](https://github.com/rabakkar)
 
@@ -105,7 +104,7 @@ Iâ€™ve worked on projects like travel booking apps and website redesigns, and Iâ
 - UI / UX Designer
 
 ### Contact 
-- Email: sadeen.al.qurashi@hotmail.com
+- Email: `sadeen.al.qurashi@hotmail.com`
 - LinkedIn: [linkedin.com/in/sadeen-al-qurashi-2a8048362](https://linkedin.com/in/sadeen-al-qurashi-2a8048362)
 
 ---
@@ -118,7 +117,7 @@ I am Shumukh Alsulami, a Computer Science student at Umm Al-Qura University, cur
 - Fullstack Developer
 
 ### Contact 
-- Email: shumukh.abdulrahman@gmail.com
+- Email: `shumukh.abdulrahman@gmail.com`
 - GitHub: [https://github.com/shumukh-ar](https://github.com/shumukh-ar)
 
 ---
@@ -134,7 +133,7 @@ I also completed a 6-month training on real-world projects, which helped me enha
 - Fullstack Developer
 
 ### Contact
-- Email: faizahalyasi@gmail.com
+- Email: `faizahalyasi@gmail.com`
 - LinkedIn: [http://linkedin.com/in/faizah-al-yasi-02a3a82a1](http://linkedin.com/in/faizah-al-yasi-02a3a82a1)
 - GitHub: [https://github.com/Faizah-55](https://github.com/Faizah-55)
 
