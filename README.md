@@ -22,10 +22,9 @@
 
 ---
 
-## App Walkthrough
+  ## App Walkthrough
 
-- User Flow: [Watch Demo](https://your-video-link.com/user-demo)  
-- Admin Panel: [Watch Demo](https://your-video-link.com/admin-demo)
+You can watch all demo videos from this [Google Drive link](https://drive.google.com/drive/folders/1kKVC3zBDTZKamjTl4uetYnWhfYv06y9u?usp=sharing).
 
 ---
 
